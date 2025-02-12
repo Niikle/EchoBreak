@@ -1,4 +1,6 @@
+#include <cstdlib>
 #include <iostream>
+#include <string>
 #include <unistd.h>
 #include <X11/keysym.h>
 #include <X11/extensions/XTest.h>
@@ -29,7 +31,7 @@ void emulate_keyboard(std::string inp){
 std::string exec(const char* cmd) {
     std::array<char, 128> buffer;
     std::string result;
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+    std::unique_ptr<FILE, int(*)(FILE*)> pipe(popen(cmd, "r"), pclose);
     while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
         result += buffer.data();
     }
@@ -61,8 +63,36 @@ void setup(){
 	//ur func to setup worker and download xmrig
 }
 
-void connect(std::string ip){
-	//coming soon
+std::vector<std::string> split(std::string str){
+	std::string word = "";
+	std::vector<std::string> res;
+	for(char c : str){
+		if(c == ' '){
+			res.push_back(word);
+			word = "";
+		}
+		else{
+			word += c;
+		}
+	}
+	res.push_back(word);
+	return res;
+}
+
+void connect(std::string host){
+	std::ifstream in("hosts.txt", std::ios::in);
+	if(in.is_open()){
+		std::string line = "";
+		while(std::getline(in, line)){
+			if(split(line)[0] == host){
+				system(split(line)[1].c_str());
+			}
+		}
+	}
+	else{
+		std::cout << "hosts not found\n";
+	}
+	in.close();
 }
 
 int main(int argc, char* argv[]){
@@ -71,7 +101,7 @@ int main(int argc, char* argv[]){
 	std::vector<std::string> hosts;
 	
 	if(argc <= 1){
-		std::cout << "use -scan or -connect [ip]\n ";
+		std::cout << "use scan or connect [ip]\n ";
 		return 1;
 	}
 	
@@ -104,8 +134,8 @@ int main(int argc, char* argv[]){
 		out.close(); // close file
 	}	
 	else if(arg == "connect"){
-		std::string ip = argv[1];
-		connect(ip);
+		std::string host = argv[1];
+		connect(host);
 	}
 	
 	return 0xABCDEF;
