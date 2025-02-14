@@ -8,8 +8,6 @@
 #include <fstream>
 #include <vector>
 #include <array>
-//#include <X11/Xlib.h>
-//#include <stdlib.h>
 
 void emulate_keyboard(std::string inp){
 	Display *display;
@@ -96,7 +94,7 @@ void connect(std::string host){
 }
 
 int main(int argc, char* argv[]){
-	std::cout << "W3LC0M T0 ECHOBREAK!!" << std::endl;
+	std::cout << "W3LC0M T0 \033[095mECHOBREAK\033[0m!!" << std::endl;
 	std::string ip;
 	std::vector<std::string> hosts;
 	
