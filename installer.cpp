@@ -89,21 +89,24 @@ int main(int argc, char* argv[]){
 	std::vector<std::string> hosts;
 	
 	if(argc <= 1){
-		std::cout << "use scan or connect [ip]\n ";
+		std::cout << "Enter: scan, setup, connect\n ";
+		std::cout << "	scan - scanns for computers\n ";
+		std::cout << "	setup - shares a setup script\n ";
+		std::cout << "	connect [ip] - ssh connects to ip\n ";
 		return 1;
 	}
 	std::string arg = argv[1];
 	if(arg == "scan"){
 		std::string currect_host = "";
 		for(int i = 2; i < 256; ++i){
-			//checking for 112
+			//checking for 212
 			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
 				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " hostname"; //ip
 				currect_host = exec(ip.c_str()) + " " + std::to_string(i);
 				hosts.push_back(currect_host); //to ip data base (edit to system if it does not working)
 				std::cout << currect_host << std::endl;
 			}
-			//checking for 113
+			//checking for 213
 			if(isPortOpen("172.17.213."+std::to_string(i), 22)){
 				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " hostname"; //ip
 				currect_host = exec(ip.c_str()) + " " + std::to_string(i);
@@ -121,12 +124,12 @@ int main(int argc, char* argv[]){
 
 	else if(arg == "setup"){
 		for(int i = 2; i < 256; ++i){
-			//112
+			//212
 			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
 				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " git clone https://github.com/Andrew-24coop/EchoBreak.git"; //ip
 				system(ip.c_str());
 			}
-			//113
+			//213
 			if(isPortOpen("172.17.213."+std::to_string(i), 22)){
 				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " git clone https://github.com/Andrew-24coop/EchoBreak.git"; //ip
 				system(ip.c_str());
