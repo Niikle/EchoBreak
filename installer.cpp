@@ -23,7 +23,7 @@ bool isPortOpen(const std::string& ip, int port) {
 
     struct timeval timeout;
     timeout.tv_sec = 1;  
-    timeout.tv_usec = 0;
+    timeout.tv_usec = 500000;
     setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
 
     // try
