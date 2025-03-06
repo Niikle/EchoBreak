@@ -1,5 +1,8 @@
 #include <cstdlib>
+#include <iomanip>
+#include <ios>
 #include <iostream>
+#include <ostream>
 #include <string>
 #include <unistd.h>
 #include <memory>
@@ -8,6 +11,7 @@
 #include <array>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <ctime>
 
 bool isPortOpen(const std::string& ip, int port) {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -67,19 +71,20 @@ std::vector<std::string> split(std::string str){
 	return res;
 }
 
-void connect(std::string host){
+inline std::string connect(std::string host, std::string command){
 	std::ifstream in("hosts.txt", std::ios::in);
 	if(in.is_open()){
 		std::string line = "";
 		while(std::getline(in, line)){
 			if(split(line)[0] == host){
-				system(split(line)[1].c_str());
+				return exec(("sshpass -p student@" + split(line)[1] + command).c_str());
 			}
 		}
 	}
 	else{
-		std::cout << "hosts not found\n";
+		return "hosts not found\n";
 	}
+	return "host not found\n";
 	in.close();
 }
 
@@ -87,7 +92,8 @@ int main(int argc, char* argv[]){
 	std::cout << "W3LC0M T0 \033[095mECHOBREAK\033[0m!!" << std::endl;
 	std::string ip;
 	std::vector<std::string> hosts;
-	
+	clock_t start, end;
+	start = clock();
 	if(argc <= 1){
 		std::cout << "Enter: scan, setup, connect\n ";
 		std::cout << "	scan - scanns for computers\n ";
@@ -98,20 +104,23 @@ int main(int argc, char* argv[]){
 	std::string arg = argv[1];
 	if(arg == "scan"){
 		std::string currect_host = "";
+		int total = 0;
 		for(int i = 2; i < 256; ++i){
 			//checking for 212
 			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
 				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " hostname"; //ip
-				currect_host = exec(ip.c_str()) + " " + std::to_string(i);
+				currect_host = exec(ip.c_str()) + " 172.17.212."+std::to_string(i);
 				hosts.push_back(currect_host); //to ip data base (edit to system if it does not working)
 				std::cout << currect_host << std::endl;
+				++total;
 			}
 			//checking for 213
 			if(isPortOpen("172.17.213."+std::to_string(i), 22)){
 				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " hostname"; //ip
-				currect_host = exec(ip.c_str()) + " " + std::to_string(i);
+				currect_host = exec(ip.c_str()) + + " 172.17.213."+std::to_string(i);
 				hosts.push_back(currect_host); //to ip data base (edit to system if it does not working)
 				std::cout << currect_host << std::endl;
+				++total;
 			}
 		}
 
@@ -120,6 +129,7 @@ int main(int argc, char* argv[]){
 			out << host << std::endl; // write
 		}
 		out.close(); // close file
+		std::cout << "total hosts: " << total << std::endl;
 	}	
 
 	else if(arg == "setup"){
@@ -137,10 +147,14 @@ int main(int argc, char* argv[]){
 		}
 	}
 
-	else if(arg == "connect"){
+	else if(arg == "send"){
 		std::string host = argv[1];
-		connect(host);
+		std::string command = argv[2];
+		std::cout << connect(host, command);
 
 	}
+	end = clock();
+	double execution_time = double(end - start) / double(CLOCKS_PER_SEC);
+	std::cout << "time taken: " << std::fixed << execution_time << std::setprecision(5) << std::endl;
 	return 0xABCDEF;
 }
