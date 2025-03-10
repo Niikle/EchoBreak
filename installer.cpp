@@ -84,8 +84,8 @@ inline std::string connect(std::string host, std::string command){
 	else{
 		return "hosts not found\n";
 	}
-	return "host not found\n";
 	in.close();
+	return "host not found\n";
 }
 
 int main(int argc, char* argv[]){
