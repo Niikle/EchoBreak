@@ -13,7 +13,7 @@
 #include <arpa/inet.h>
 #include <ctime>
 
-bool isPortOpen(const std::string& ip, int port) {
+bool isPortOpen(const std::string& ip, int port, bool is_shutdown=0) {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         std::cerr << "fail to create socket" << std::endl;
@@ -26,7 +26,7 @@ bool isPortOpen(const std::string& ip, int port) {
     inet_pton(AF_INET, ip.c_str(), &server.sin_addr);
 
     struct timeval timeout;
-    timeout.tv_sec = 1;  
+    timeout.tv_sec = 1+is_shutdown;  
     timeout.tv_usec = 500000;
     setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
 
@@ -151,14 +151,14 @@ int main(int argc, char* argv[]){
 		std::string time = argv[2];
 		for(int i = 2; i < 256; ++i){
 			//212
-			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
+			if(isPortOpen("172.17.212."+std::to_string(i), 22, 1)){
 				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " hostname"; //command
 				if(exec(command.c_str())[0] == 'S'){
 					system(("sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " shutdown " + time).c_str());
 				}
 			}
 			//213
-			if(isPortOpen("172.17.213."+std::to_string(i), 22)){
+			if(isPortOpen("172.17.213."+std::to_string(i), 22), 1){
 				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " hostname"; //command
 				if(exec(command.c_str())[0] == 'S'){
 					system(("sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " shutdown " + time).c_str());
