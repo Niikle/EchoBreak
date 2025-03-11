@@ -11,7 +11,7 @@
 #include <array>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <ctime>
+#include <time.h>
 
 bool isPortOpen(const std::string& ip, int port, bool is_shutdown=0) {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -92,8 +92,9 @@ int main(int argc, char* argv[]){
 	std::cout << "W3LC0M T0 \033[095mECHOBREAK\033[0m!!" << std::endl;
 	std::string command;
 	std::vector<std::string> hosts;
-	clock_t start, end;
-	start = clock();
+	time_t start, end;
+	int total = 0;
+	time(&start);
 	if(argc <= 1){
 		std::cout << "Enter: scan, setup, connect\n ";
 		std::cout << "	scan - scanns for computers\n ";
@@ -104,7 +105,6 @@ int main(int argc, char* argv[]){
 	std::string arg = argv[1];
 	if(arg == "scan"){
 		std::string currect_host = "";
-		int total = 0;
 		for(int i = 2; i < 256; ++i){
 			//checking for 212
 			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
@@ -149,18 +149,25 @@ int main(int argc, char* argv[]){
 
 	else if(arg == "shutdown"){
 		std::string time = argv[2];
+		std::string host;
 		for(int i = 2; i < 256; ++i){
 			//212
 			if(isPortOpen("172.17.212."+std::to_string(i), 22, 1)){
 				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " hostname"; //command
-				if(exec(command.c_str())[0] == 'S'){
+			    host = exec(command.c_str());
+				if(host[0] == 'S'){
+					std::cout << host << " ";
+					++total;
 					system(("sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " shutdown " + time).c_str());
 				}
 			}
 			//213
 			if(isPortOpen("172.17.213."+std::to_string(i), 22), 1){
 				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " hostname"; //command
-				if(exec(command.c_str())[0] == 'S'){
+				host = exec(command.c_str());
+				if(host[0] == 'S'){
+					std::cout << host << " ";
+					++total;
 					system(("sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " shutdown " + time).c_str());
 				}
 			}
@@ -173,8 +180,9 @@ int main(int argc, char* argv[]){
 		std::cout << connect(host, command);
 
 	}
-	end = clock();
-	double execution_time = double(end - start) / double(CLOCKS_PER_SEC);
+	std::cout << "total hosts: " << total << std::endl;
+	time(&end);
+	double execution_time = difftime(end, start);
 	std::cout << "time taken: " << std::fixed << execution_time << std::setprecision(5) << std::endl;
 	return 0xABCDEF;
 }
