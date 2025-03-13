@@ -172,15 +172,18 @@ int main(int argc, char* argv[]){
 				}
 			}
 		}
+		std::cout << "total hosts: " << total << std::endl;
 	}
-
+	
 	else if(arg == "send"){
 		std::string host = argv[1];
-		std::string command = argv[2];
-		std::cout << connect(host, command);
+		std::string cmd = "";
+		for(int i = 2; i < argc; ++i){
+			cmd += argv[i];
+		}
+		std::cout << connect(host, cmd);
 
 	}
-	std::cout << "total hosts: " << total << std::endl;
 	time(&end);
 	double execution_time = difftime(end, start);
 	std::cout << "time taken: " << std::fixed << execution_time << std::setprecision(5) << std::endl;
