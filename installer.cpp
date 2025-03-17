@@ -88,7 +88,7 @@ inline std::string connect(std::string host, std::string command){
 	return "host not found\n";
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]){	
 	std::cout << "W3LC0M T0 \033[095mECHOBREAK\033[0m!!" << std::endl;
 	std::string command;
 	std::vector<std::string> hosts;
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]){
 		std::cout << "Enter: scan, setup, connect\n ";
 		std::cout << "	scan - scanns for computers\n ";
 		std::cout << "	setup - shares a setup script\n ";
-		std::cout << "	connect [ip] - ssh connects to ip\n ";
+		std::cout << "	send [host] [cmd] - send cmd to host\n ";
 		return 1;
 	}
 	std::string arg = argv[1];
