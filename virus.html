@@ -51,6 +51,22 @@
         .menu a:hover {
             text-decoration: underline;
         }
+        .download-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #d9534f;
+            border: none;
+            cursor: pointer;
+        }
+        .download-button:hover {
+            background-color: #c02c3d;
+        }
+        .content {
+            text-align: center;
+            margin-top: 50px;
+        }
     </style>
 </head>
 <body>
@@ -60,11 +76,38 @@
         <a href="about.html">о нас</a>
         <a href="feedback.html">обратная связь</a>
     </div>
+    
     <h1>Вирус</h1>
-    <p>Здесь будет информация о вирусах.</p>
+    
+    <div class="content">
+        <p>
+        1. Скачиваете вирус по кнопке внизу
+        </p>
+        <p>
+        2. Распаковываем архив и заходим в папку
+        </p>
+        <p>
+        3. В любом месте нажимаем правой кнопкой мыши Open in Terminal
+        </p>
+        <p>
+        Команды:
+        ./EchoBreak scan - чтобы найти ip адреса
+      чтобы подключиться пишем в другом терминале(нажать Ctrl+Alt+T) ssh student@ip
+      потом вводим пароль от 1 до 8
+        </p>
+        
+        <button class="download-button" onclick="downloadRepo()">Скачать ZIP</button>
+    </div>
+    
     <div class="footer">
-        By <a href="https://github.com/Andrew-24coop" target="_blank">SpaceLink</a> and <a href="https://github.com/zen4xx" target="_blank">zen4xx</a><br>
+        By <a href="https://github.com/Andrew-24coop" target="_blank">Andrew-24coop</a> and <a href="https://github.com/zen4xx" target="_blank">zen4xx</a><br>
         EchoBreak, 2025
     </div>
+
+    <script>
+        function downloadRepo() {
+            window.location.href = 'https://github.com/Andrew-24coop/EchoBreak/archive/refs/heads/main.zip'; // Change main to your branch name if necessary
+        }
+    </script>
 </body>
 </html>
