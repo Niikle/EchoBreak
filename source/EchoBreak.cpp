@@ -13,6 +13,8 @@
 #include <arpa/inet.h>
 #include <time.h>
 
+// i am so fucking tired
+
 bool isPortOpen(const std::string& ip, int port, bool time=0) {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
