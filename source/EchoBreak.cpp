@@ -77,7 +77,7 @@ inline std::string connect(std::string host, std::string command){
 		std::string line = "";
 		while(std::getline(in, line)){
 			if(split(line)[0] == host){
-				return exec(("sshpass -p student@" + split(line)[1] + command).c_str());
+				return exec(("sshpass -p 12345678 student@" + split(line)[1] + " " + command).c_str());
 			}
 		}
 	}
