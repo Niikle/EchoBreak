@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вирус - EchoBreak</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'VT323', monospace;
+            text-align: center;
+            padding: 50px;
+            position: relative;
+            min-height: 80vh;
+            margin: 0;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        h1 {
+            font-size: 50px;
+            color: #d9534f;
+        }
+        p {
+            font-size: 20px;
+
+            color: #cccccc;
+        }
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            font-size: 16px;
+            color: #aaaaaa;
+        }
+        .footer a {
+            color: #d9534f;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .menu {
+            margin-bottom: 20px;
+        }
+        .menu a {
+            margin: 0 15px;
+            color: #d9534f;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .menu a:hover {
+            text-decoration: underline;
+        }
+        .download-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #d9534f;
+            border: none;
+            cursor: pointer;
+        }
+        .download-button:hover {
+            background-color: #c02c3d;
+        }
+        .content {
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Check if the user is logged in
+        if (!localStorage.getItem('role') || localStorage.getItem('role') !== 'user') {
+            alert('Вы должны войти на эту страницу!');
+            window.location.href = 'virus.html'; // Redirect to login page
+        }
+    </script>
+    
+    <div class="menu">
+        <a href="index.html">главная</a>
+        <a href="fanfic.html">фанфик</a>
+        <a href="feedback.html">обратная связь</a>
+    </div>
+
+    <h1>Вирус</h1>
+    
+    <div class="content">
+        <p>1. Скачиваете вирус по кнопке внизу</p>
+        <p>2. Распаковываем архив и заходим в папку</p>
+        <p>3. В любом месте нажимаем правой кнопкой мыши Open in Terminal</p>
+        <p>Команды: ./EchoBreak scan - чтобы найти ip адреса, чтобы подключиться пишем в другом терминале(нажать Ctrl+Alt+T) ssh student@ip потом вводим пароль от 1 до 8</p>
+        <button class="download-button" onclick="downloadRepo()">Скачать ZIP</button>
+    </div>
+    
+    <div class="footer">
+        By <a href="https://github.com/Andrew-24coop" target="_blank">Andrew-24coop</a> and <a href="https://github.com/zen4xx" target="_blank">zen4xx</a><br>
+        EchoBreak, 2025
+    </div>
+
+    <script>
+        function downloadRepo() {
+            window.location.href = 'https://github.com/Andrew-24coop/EchoBreak/archive/refs/heads/main.zip';
+        }
+    </script>
+</body>
+</html>
