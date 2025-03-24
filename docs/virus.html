@@ -3,109 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вирус - EchoBreak</title>
+    <title>Login</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'VT323', monospace;
             text-align: center;
             padding: 50px;
-            position: relative;
-            min-height: 80vh;
-            margin: 0;
             background-color: #121212;
             color: #ffffff;
         }
         h1 {
-            font-size: 50px;
             color: #d9534f;
         }
-        p {
-            font-size: 20px;
-            color: #cccccc;
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 200px;
         }
-        .footer {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            font-size: 16px;
-            color: #aaaaaa;
-        }
-        .footer a {
-            color: #d9534f;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        .menu {
-            margin-bottom: 20px;
-        }
-        .menu a {
-            margin: 0 15px;
-            color: #d9534f;
-            text-decoration: none;
-            font-size: 18px;
-        }
-        .menu a:hover {
-            text-decoration: underline;
-        }
-        .download-button {
-            margin-top: 20px;
+        .login-button {
             padding: 10px 20px;
-            font-size: 18px;
             color: #fff;
             background-color: #d9534f;
             border: none;
             cursor: pointer;
         }
-        .download-button:hover {
+        .login-button:hover {
             background-color: #c02c3d;
-        }
-        .content {
-            text-align: center;
-            margin-top: 50px;
         }
     </style>
 </head>
 <body>
-    <div class="menu">
-        <a href="index.html">главная</a>
-        <a href="fanfic.html">фанфик</a>
-        <a href="feedback.html">обратная связь</a>
-    </div>
-    
-    <h1>Вирус</h1>
-    
-    <div class="content">
-        <p>
-        1. Скачиваете вирус по кнопке внизу
-        </p>
-        <p>
-        2. Распаковываем архив и заходим в папку
-        </p>
-        <p>
-        3. В любом месте нажимаем правой кнопкой мыши Open in Terminal
-        </p>
-        <p>
-        Команды:
-        ./EchoBreak scan - чтобы найти ip адреса
-      чтобы подключиться пишем в другом терминале(нажать Ctrl+Alt+T) ssh student@ip
-      потом вводим пароль от 1 до 8
-        </p>
-        
-        <button class="download-button" onclick="downloadRepo()">Скачать ZIP</button>
-    </div>
-    
-    <div class="footer">
-        By <a href="https://github.com/Andrew-24coop" target="_blank">Andrew-24coop</a> and <a href="https://github.com/zen4xx" target="_blank">zen4xx</a><br>
-        EchoBreak, 2025
-    </div>
+    <h1>Вход</h1>
+    <input type="text" id="username" placeholder="Логин (user/admin)">
+    <input type="password" id="password" placeholder="Пароль">
+    <button class="login-button" onclick="login()">Войти</button>
 
     <script>
-        function downloadRepo() {
-            window.location.href = 'https://github.com/Andrew-24coop/EchoBreak/archive/refs/heads/main.zip'; // Change main to your branch name if necessary
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === "user" || username === "admin") {
+                if (password === "test") {
+                    localStorage.setItem('role', username);
+                    if (username === "admin") {
+                        window.location.href = 'admin.html'; // Redirect to admin page
+                    } else {
+                        window.location.href = 'user.html'; // Redirect to user page
+                    }
+                } else {
+                    alert('Неверный пароль!');
+                }
+            } else {
+                alert('Неверное имя пользователя!');
+            }
         }
     </script>
 </body>
