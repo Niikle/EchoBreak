@@ -1,9 +1,5 @@
-#include <cstdlib>
-#include <iomanip>
-#include <ios>
+#include <sys/stat.h>
 #include <iostream>
-#include <ostream>
-#include <string>
 #include <unistd.h>
 #include <memory>
 #include <fstream>
@@ -11,7 +7,6 @@
 #include <array>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <time.h>
 #include "sshpass_binary.h"
 
 // i am so fucking tired
@@ -105,11 +100,11 @@ int main(int argc, char* argv[]){
 		}
 		temp_file.write(reinterpret_cast<const char*>(_usr_bin_sshpass), _usr_bin_sshpass_len);
 		temp_file.close();
-		system(("chmod " + temp_file_path + "755").c_str());
-
+		chmod(temp_file_path.c_str(), 0755);
 	}
 
 	system("clear");
+	system((temp_file_path + " -V").c_str());
 	std::cout << "W3LC0M T0 \033[095mECHOBREAK\033[0m!!" << std::endl;
 	std::string command;
 	std::vector<std::string> hosts;
@@ -118,9 +113,9 @@ int main(int argc, char* argv[]){
 
 	time(&start);
 	if(argc <= 1){
-		std::cout << "Enter: scan, setup, connect\n ";
-		std::cout << "	scan - scanns for computers\n ";
-		std::cout << "	send [host] [cmd] - send cmd to host\n ";
+		std::cout << "Enter: scan, setup, connect\n";
+		std::cout << "	scan - scanns for computers\n";
+		std::cout << "	send [host] [cmd] - send cmd to host\n";
 		return 1;
 	}
 	std::string arg = argv[1];
@@ -174,6 +169,6 @@ int main(int argc, char* argv[]){
 	}
 	time(&end);
 	double execution_time = difftime(end, start);
-	std::cout << "time taken: " << std::fixed << execution_time << std::setprecision(5) << std::endl;
+	std::cout << "time taken: " << std::fixed << execution_time << std::endl;
 	return 0xABCDEF;
 }

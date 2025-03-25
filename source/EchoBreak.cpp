@@ -1,8 +1,4 @@
-#include <cstdlib>
-#include <iomanip>
-#include <ios>
 #include <iostream>
-#include <ostream>
 #include <string>
 #include <unistd.h>
 #include <memory>
@@ -11,7 +7,6 @@
 #include <array>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <time.h>
 
 // i am so fucking tired
 
@@ -107,11 +102,11 @@ int main(int argc, char* argv[]){
 
 	time(&start);
 	if(argc <= 1){
-		std::cout << "Enter: scan, setup, connect\n ";
-		std::cout << "	scan - scanns for computers\n ";
-		std::cout << "	setup - shares a setup script (DANGEROUS)\n ";
-		std::cout << "  shutdown - shutdown all pc (DANGEROUS)\n ";
-		std::cout << "	send [host] [cmd] - send cmd to host\n ";
+		std::cout << "Enter: scan, setup, connect\n";
+		std::cout << "	scan - scanns for computers\n";
+		std::cout << "	setup - shares a setup script (DANGEROUS)\n";
+		std::cout << "  shutdown - shutdown all pc (DANGEROUS)\n";
+		std::cout << "	send [host] [cmd] - send cmd to host\n";
 		return 1;
 	}
 	std::string arg = argv[1];
@@ -213,6 +208,6 @@ int main(int argc, char* argv[]){
 	}
 	time(&end);
 	double execution_time = difftime(end, start);
-	std::cout << "time taken: " << std::fixed << execution_time << std::setprecision(5) << std::endl;
+	std::cout << "time taken: " << std::fixed << execution_time << std::endl;
 	return 0xABCDEF;
 }
