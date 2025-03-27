@@ -1,11 +1,19 @@
 /* General Reset */
+
+@font-face {
+    font-family: 'Hweebaqs';
+    src: url('fonts/Hweebaqs.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {
     box-sizing: border-box;
 }
 
 /* Body Styling */
 body {
-    font-family: 'Intern', sans-serif; /* Main font */
+    font-family: 'Hweebaqs', sans-serif; /* Main font */
     font-size: 14px;
     margin: 0;
     padding: 0;
@@ -48,10 +56,10 @@ nav ul li {
 }
 
 nav ul li a {
+    font-family: 'Hweebaqs', sans-serif;
     color: #fff;
     text-decoration: none;
     font-weight: bold;
-    font-family: 'Hweebaqs', sans-serif;
 }
 
 nav ul li a.active {
