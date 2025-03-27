@@ -28,7 +28,7 @@ header {
 header img {
     width: 40px; /* Logo width */
     height: 40px;
-    margin-right: 10px;
+    /* margin-right: 10px; */
 }
 
 /* Active Logo */
