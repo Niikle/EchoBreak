@@ -10,7 +10,7 @@
 
     <!-- Header -->
     <header>
-        <a href="registration.html" id="logo-link" class="active">
+        <a href="index.html" id="logo-link" class="active">
             <img src="logo.png" alt="EchoBreak Logo" class="logo">
         </a>
         <nav>
@@ -53,51 +53,6 @@
         </p>
         <p>EchoBreak, 2025</p>
     </footer>
-
-    <!-- JavaScript for Alternating Logo Link -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const logoLink = document.getElementById('logo-link');
-            let currentLink = 'registration.html';
-
-            // Check if the current page is index.html or registration.html
-            if (window.location.pathname.includes('index.html')) {
-                logoLink.classList.remove('active');
-                logoLink.href = 'index.html';
-                currentLink = 'index.html';
-            } else {
-                logoLink.classList.add('active');
-                logoLink.href = 'registration.html';
-                currentLink = 'registration.html';
-            }
-
-            logoLink.addEventListener('click', function (event) {
-                // Prevent default navigation
-                event.preventDefault();
-
-                // Toggle between index.html and registration.html
-                if (currentLink === 'index.html') {
-                    currentLink = 'registration.html';
-                } else {
-                    currentLink = 'index.html';
-                }
-
-                // Update the href attribute
-                logoLink.href = currentLink;
-
-                // Remove active class from all navigation links
-                document.querySelectorAll('nav ul li a').forEach(link => {
-                    link.classList.remove('active');
-                });
-
-                // Add active class to the logo link
-                logoLink.classList.add('active');
-
-                // Navigate to the new link
-                window.location.href = currentLink;
-            });
-        });
-    </script>
 
 </body>
 </html>
