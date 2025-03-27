@@ -52,31 +52,5 @@
         <p>EchoBreak, 2025</p>
     </footer>
 
-    <!-- JavaScript for Alternating Logo Link -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const logoLink = document.getElementById('logo-link');
-            let currentLink = 'index.html';
-
-            logoLink.addEventListener('click', function (event) {
-                // Prevent default navigation
-                event.preventDefault();
-
-                // Toggle between index.html and registration.html
-                if (currentLink === 'index.html') {
-                    currentLink = 'registration.html';
-                } else {
-                    currentLink = 'index.html';
-                }
-
-                // Update the href attribute
-                logoLink.href = currentLink;
-
-                // Navigate to the new link
-                window.location.href = currentLink;
-            });
-        });
-    </script>
-
 </body>
 </html>
