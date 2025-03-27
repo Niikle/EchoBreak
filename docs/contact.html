@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EchoBreak - Вирус</title>
+    <title>EchoBreak - Обратная связь</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,9 +15,9 @@
     <nav>
         <ul>
             <li><a href="about.html">О нас</a></li>
-            <li><a href="virus.html class="active">Вирус</a></li>
+            <li><a href="virus.html">Вирус</a></li>
             <li><a href="fanfics.html">Фанфики</a></li>
-            <li><a href="contact.html">Написать нам</a></li>
+            <li><a href="contact.html class="active">Написать нам</a></li>
         </ul>
     </nav>
 </header>
@@ -27,16 +27,20 @@
     <!-- Main Content -->
     <main>
         <h1>EchoBreak</h1>
-        <h2>Вирус</h2>
-        <p>Инструкция по использованию</p>
-        <ol>
-            <li>Скачиваете вирус по кнопке внизу</li>
-            <li>Распаковываете архив и заходим в папку</li>
-            <li>В любом месте нажимаем правой кнопкой мыши Open in Terminal</li>
-        </ol>
-        <p>Команды:</p>
-        <p><strong>.EchoBreak scan</strong> - чтобы найти ip адреса, чтобы подключиться пишем в другом терминале (нажать Ctrl+Alt+T) ssh student@ip потом вводим пароль от 1 до 8</p>
-        <a href="#" class="button">Скачать ZIP</a>
+        <h2>Обратная связь</h2>
+        <p>Пожалуйста, заполните форму ниже:</p>
+        <form>
+            <label for="name">Имя</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="reason">Причина</label>
+            <input type="text" id="reason" name="reason" required>
+
+            <label for="message">Сообщение</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+
+            <button type="submit" class="button">Отправить</button>
+        </form>
     </main>
 
     <!-- Footer -->

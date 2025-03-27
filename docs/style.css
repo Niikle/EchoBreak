@@ -1,0 +1,148 @@
+/* General Reset */
+* {
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Hweebaqs', sans-serif; /* Main font */
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    background-color: #3b3b3b;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure body takes at least full viewport height */
+}
+
+/* Header */
+header {
+    background-color: #3b3b3b;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header img {
+    width: 40px; /* Logo width */
+    height: 40px;
+    /* margin-right: 10px; */
+}
+
+/* Active Logo */
+header a#logo-link.active {
+    border-bottom: 2px solid #d25354; /* Highlight the logo when active */
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: 'Hweebaqs', sans-serif;
+}
+
+nav ul li a.active {
+    color: #d25354;
+    border-bottom: 2px solid #d25354;
+}
+
+/* Separator Line */
+.separator {
+    width: 100%; /* Full width */
+    height: 1px; /* Thin line */
+    background-color: #fff; /* White color */
+    margin: 0 auto; /* Centered horizontally */
+}
+
+/* Main Content */
+main {
+    padding: 20px;
+    flex: 1; /* Allow main content to take up remaining space */
+    text-align: center; /* Center the main content */
+}
+
+h1 {
+    font-family: 'Hweebaqs', sans-serif; /* Title font */
+    color: #d25354;
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-family: 'Hweebaqs', sans-serif; /* Title font */
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #ccc;
+    line-height: 1.6;
+}
+
+ol {
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #d25354;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #b33434;
+}
+
+form {
+    margin-top: 20px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #3b3b3b;
+    border: 2px solid #d25354;
+    border-radius: 5px;
+    color: #fff;
+}
+
+/* Footer */
+footer {
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: auto; /* Push footer to the bottom */
+}
+
+footer span {
+    color: #d25354;
+}
