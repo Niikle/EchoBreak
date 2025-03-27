@@ -1,3 +1,4 @@
+#include <string>
 #include <sys/stat.h>
 #include <iostream>
 #include <unistd.h>
@@ -8,6 +9,8 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include "sshpass_binary.h"
+
+#define TEMP_FILE_PATH "/tmp/sshpass"
 
 // i am so fucking tired
 
@@ -79,7 +82,8 @@ inline std::string connect(std::string host, std::string command, int is_downloa
 					return exec(("sshpass -p 12345678 student@" + split(line)[1] + " " + command).c_str());
 				}
 				else{
-					return exec(("/tmp/sshpass -p 12345678 student@" + split(line)[1] + " " + command).c_str());
+					std::string tmp = TEMP_FILE_PATH;
+					return exec((tmp + " -p 12345678 student@" + split(line)[1] + " " + command).c_str());
 				}
 			}
 		}
@@ -95,7 +99,7 @@ int main(int argc, char* argv[]){
 
 	int is_download = system("sshpass -V");
 
-	std::string temp_file_path = "/tmp/sshpass";
+	std::string temp_file_path = TEMP_FILE_PATH;
 	
 	if(is_download != 0){
 		std::ofstream temp_file(temp_file_path, std::ios::binary);
