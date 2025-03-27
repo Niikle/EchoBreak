@@ -48,6 +48,17 @@
             const logoLink = document.getElementById('logo-link');
             let currentLink = 'index.html';
 
+            // Check if the current page is index.html or registration.html
+            if (window.location.pathname.includes('registration.html')) {
+                logoLink.classList.remove('active');
+                logoLink.href = 'registration.html';
+                currentLink = 'registration.html';
+            } else {
+                logoLink.classList.add('active');
+                logoLink.href = 'index.html';
+                currentLink = 'index.html';
+            }
+
             logoLink.addEventListener('click', function (event) {
                 // Prevent default navigation
                 event.preventDefault();
