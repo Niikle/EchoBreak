@@ -1,15 +1,22 @@
 /* General Reset */
+@font-face {
+    font-family: 'Hweebaqs';
+    src: url('fonts/Hweebaqs.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {
     box-sizing: border-box;
 }
 
 /* Body Styling */
 body {
-    font-family: 'Hweebaqs', sans-serif; /* Main font */
+    font-family: 'Intern', sans-serif; /* Main font */
     font-size: 14px;
     margin: 0;
     padding: 0;
-    background-color: #3b3b3b;
+    background-color: #303030;
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -18,7 +25,7 @@ body {
 
 /* Header */
 header {
-    background-color: #3b3b3b;
+    background-color: #303030;
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
