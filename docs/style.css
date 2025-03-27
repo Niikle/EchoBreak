@@ -4,17 +4,17 @@
 }
 
 body {
-    font-family: 'Inter', sans-serif; /* Main font */
+    font-family: 'Hweebaqs', sans-serif; /* Main font */
     font-size: 14px;
     margin: 0;
     padding: 0;
-    background-color: #222;
+    background-color: #3b3b3b;
     color: #fff;
 }
 
 /* Header */
 header {
-    background-color: #333;
+    background-color: #3b3b3b;
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -42,12 +42,12 @@ nav ul li a {
     color: #fff;
     text-decoration: none;
     font-weight: bold;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Hweebaqs', sans-serif;
 }
 
 nav ul li a.active {
-    color: #ff4500;
-    border-bottom: 2px solid #ff4500;
+    color: #d25354;
+    border-bottom: 2px solid #d25354;
 }
 
 /* Main Content */
@@ -58,7 +58,7 @@ main {
 
 h1 {
     font-family: 'Hweebaqs', sans-serif; /* Title font */
-    color: #ff4500;
+    color: #d25354;
     font-size: 36px;
     margin-bottom: 20px;
 }
@@ -83,7 +83,7 @@ ol {
 .button {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #ff4500;
+    background-color: #d25354;
     color: #fff;
     text-decoration: none;
     border-radius: 5px;
@@ -92,7 +92,7 @@ ol {
 }
 
 .button:hover {
-    background-color: #e63900;
+    background-color: #b33434;
 }
 
 form {
@@ -109,8 +109,8 @@ form input, form textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
-    background-color: #333;
-    border: 2px solid #ff4500;
+    background-color: #3b3b3b;
+    border: 2px solid #d25354;
     border-radius: 5px;
     color: #fff;
 }
@@ -124,5 +124,5 @@ footer {
 }
 
 footer span {
-    color: #ff4500;
+    color: #d25354;
 }
