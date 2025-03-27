@@ -31,6 +31,11 @@ header img {
     margin-right: 10px;
 }
 
+/* Active Logo */
+header a#logo-link.active {
+    border-bottom: 2px solid #d25354; /* Highlight the logo when active */
+}
+
 nav ul {
     list-style: none;
     margin: 0;
