@@ -53,6 +53,13 @@ nav ul li a.active {
     border-bottom: 2px solid #d25354;
 }
 
+.separator {
+    width: 100%; /* Full width */
+    height: 1px; /* Thin line */
+    background-color: #fff; /* White color */
+    margin: 0 auto; /* Centered horizontally */
+}
+
 /* Main Content */
 main {
     padding: 20px;
