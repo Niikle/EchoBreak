@@ -63,9 +63,18 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Extract totalDue from the API response
-                    const totalDue = parseFloat(data.amtDue || 0).toFixed(6); // Format to 6 decimal places
-                    xmrStatsDiv.innerHTML = `<p>Общая сумма XMR к выплате: <strong>${totalDue} XMR</strong></p>`;
+                    // Extract totalDue and amtPaid from the API response
+                    const totalDue = parseFloat(data.amtDue / 1000000000000 || 0).toFixed(6); // Format to 6 decimal places
+                    const amtPaid = parseFloat(data.amtPaid / 1000000000000 || 0).toFixed(6); // Format to 6 decimal places
+
+                    // Display both values in the stats section
+                    xmrStatsDiv.innerHTML = `
+                        <p>Общая сумма XMR к выплате: <strong>${totalDue} XMR</strong></p>
+                        <p>Общая сумма XMR выплачено: <strong>${amtPaid} XMR</strong></p>
+                        <h3>INFO</h3>
+                        <p>Минимальная сумма XMR к выплате: <strong>0.003 XMR</strong></p>
+                        <p>Общая сумма XMR выплачено - <strong>сумма на нашем счету</strong></p>
+                    `;
                 })
                 .catch(error => {
                     console.error('Error fetching XMR stats:', error);
