@@ -101,6 +101,10 @@ p {
     line-height: 1.6;
 }
 
+p span {
+    color: #d25354;
+}
+
 ol {
     color: #ccc;
     margin-bottom: 20px;
