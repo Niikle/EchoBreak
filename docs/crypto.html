@@ -64,7 +64,7 @@
                 })
                 .then(data => {
                     // Extract totalDue from the API response
-                    const totalDue = parseFloat(data.totalDue || 0).toFixed(6); // Format to 6 decimal places
+                    const totalDue = parseFloat(data.amtDue || 0).toFixed(6); // Format to 6 decimal places
                     xmrStatsDiv.innerHTML = `<p>Общая сумма XMR к выплате: <strong>${totalDue} XMR</strong></p>`;
                 })
                 .catch(error => {
