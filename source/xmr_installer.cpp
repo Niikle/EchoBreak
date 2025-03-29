@@ -53,7 +53,7 @@ void editFile(const std::string& filename, std::string workername) {
 
 int main() {
     //=======Install=======
-    // for what this line:
+    // must run from root
     system("git clone https://github.com/Andrew-24coop/EchoBreak.git");
     system("cd EchoBreak/xmrig-6.22.2");
     //========Edit=========
