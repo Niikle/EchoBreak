@@ -40,6 +40,10 @@
     </main>
     <!-- Footer -->
     <footer>
+        <p>Created by 
+            <a href="https://github.com/Andrew-24coop" target="_blank"><span>Andrew-24coop</span></a> and 
+            <a href="https://github.com/zen4xx" target="_blank"><span>zen4xx</span></a>
+        </p>
         <p>EchoBreak, 2025</p>
     </footer>
     <script>
@@ -60,6 +64,8 @@
             try {
                 messageElement.textContent = 'Проверка данных...';
                 const fileName = `user${email}`;
+
+                // Fetch all Gists
                 const response = await fetch('https://api.github.com/gists', {
                     method: 'GET',
                     headers: {
@@ -72,6 +78,11 @@
                 }
 
                 const gists = await response.json();
+
+                // Debugging: Log the fetched Gists
+                console.log('Fetched Gists:', gists);
+
+                // Find the Gist with the matching filename
                 const userGist = gists.find(gist => gist.files && gist.files[fileName]);
 
                 if (!userGist) {
@@ -79,10 +90,13 @@
                     return;
                 }
 
-                const fileContent = userGist.files[fileName].content;
+                // Debugging: Log the matching Gist
+                console.log('Matching Gist:', userGist);
+
+                const fileContent = userGist.files[fileName]?.content;
 
                 if (!fileContent) {
-                    messageElement.textContent = `Ошибка: Файл пользователя пуст. ${fileName} ${fileContent}`;
+                    messageElement.textContent = 'Ошибка: Файл пользователя пуст.';
                     return;
                 }
 
