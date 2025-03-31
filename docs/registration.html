@@ -23,7 +23,6 @@
             </ul>
         </nav>
     </header>
-    <!-- Separator Line -->
     <div class="separator"></div>
     <!-- Main Content -->
     <main>
@@ -63,9 +62,32 @@
             }
 
             try {
-                messageElement.textContent = 'Регистрация...';
+                messageElement.textContent = 'Проверка данных...';
                 const fileName = `user${email}`;
+
+                // Fetch all Gists to check if the user already exists
                 const response = await fetch('https://api.github.com/gists', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `token ${githubToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при получении данных.');
+                }
+
+                const gists = await response.json();
+                const userGist = gists.find(gist => gist.files && gist.files[fileName]);
+
+                if (userGist) {
+                    messageElement.textContent = 'Ошибка: Пользователь с таким email уже зарегистрирован.';
+                    return;
+                }
+
+                // Create a new Gist for the user
+                messageElement.textContent = 'Регистрация...';
+                const createResponse = await fetch('https://api.github.com/gists', {
                     method: 'POST',
                     headers: {
                         'Authorization': `token ${githubToken}`,
@@ -82,8 +104,8 @@
                     })
                 });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
+                if (!createResponse.ok) {
+                    const errorData = await createResponse.json();
                     throw new Error(`Ошибка: ${errorData.message}`);
                 }
 
