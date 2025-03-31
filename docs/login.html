@@ -76,14 +76,28 @@
                 }
 
                 const gists = await response.json();
-                const userGist = gists.find(gist => gist.files[fileName]);
+                const userGist = gists.find(gist => gist.files && gist.files[fileName]);
 
                 if (!userGist) {
                     messageElement.textContent = 'Ошибка: Пользователь не найден.';
                     return;
                 }
 
-                const userData = JSON.parse(userGist.files[fileName].content);
+                const fileContent = userGist.files[fileName].content;
+
+                if (!fileContent) {
+                    messageElement.textContent = 'Ошибка: Файл пользователя пуст.';
+                    return;
+                }
+
+                let userData;
+                try {
+                    userData = JSON.parse(fileContent); // Parse the file content as JSON
+                } catch (parseError) {
+                    messageElement.textContent = 'Ошибка: Неверный формат данных пользователя.';
+                    return;
+                }
+
                 if (userData.password !== password) {
                     messageElement.textContent = 'Ошибка: Неверный пароль.';
                     return;
