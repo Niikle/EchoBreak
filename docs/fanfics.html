@@ -5,25 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EchoBreak - Фанфики</title>
     <link rel="stylesheet" href="style.css">
-
     <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <!-- Add this script tag for making API requests -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
     <!-- Header -->
     <header>
-    <a href="index.html" id="logo-link">
-        <img src="images/logo.png" alt="EchoBreak Logo" class="logo">
-    </a>
-    <nav>
-        <ul>
-            <li><a href="about.html">О нас</a></li>
-            <li><a href="virus.html">Вирус</a></li>
-            <li><a href="fanfics.html" class="active">Фанфики</a></li>
-            <li><a href="crypto.html">Крипта</a></li>
-            <li><a href="contact.html">Написать нам</a></li>
-        </ul>
-    </nav>
-</header>
+        <a href="index.html" id="logo-link">
+            <img src="images/logo.png" alt="EchoBreak Logo" class="logo">
+        </a>
+        <nav>
+            <ul>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="virus.html">Вирус</a></li>
+                <li><a href="fanfics.html" class="active">Фанфики</a></li>
+                <li><a href="crypto.html">Крипта</a></li>
+                <li><a href="contact.html">Написать нам</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <div class="separator"></div>
 
@@ -31,7 +33,19 @@
     <main>
         <h1>EchoBreak</h1>
         <h2>Фанфики</h2>
-        <p>Скоро здесь все появится :)</p>
+
+        <!-- Form for uploading fanfic -->
+        <form id="uploadForm">
+            <label for="title">Заголовок:</label>
+            <input type="text" id="title" name="title" placeholder="Введите заголовок..." required>
+
+            <label for="text">Текст:</label>
+            <textarea id="text" name="text" rows="10" placeholder="Введите текст фанфика..." required></textarea>
+
+            <button type="submit">Загрузить</button>
+        </form>
+
+        <p id="message"></p>
     </main>
 
     <!-- Footer -->
@@ -42,5 +56,46 @@
         </p>
         <p>EchoBreak, 2025</p>
     </footer>
+
+    <script>
+        // JavaScript to handle form submission and upload to GitHub Gist
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const title = document.getElementById('title').value;
+            const text = document.getElementById('text').value;
+
+            if (!title || !text) {
+                alert('Пожалуйста, заполните все поля.');
+                return;
+            }
+
+            const gistData = {
+                description: title,
+                public: true,
+                files: {
+                    [`${title}.txt`]: {
+                        content: text
+                    }
+                }
+            };
+
+            try {
+                // Replace 'your-github-token' with your actual GitHub Personal Access Token
+                const response = await axios.post('https://api.github.com/gists', gistData, {
+                    headers: {
+                        Authorization: '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',
+                        Accept: 'application/vnd.github.v3+json'
+                    }
+                });
+
+                const gistUrl = response.data.html_url;
+                document.getElementById('message').innerHTML = `Фанфик успешно загружен! <a href="${gistUrl}" target="_blank">Посмотреть на GitHub</a>`;
+            } catch (error) {
+                console.error('Ошибка при загрузке фанфика:', error);
+                document.getElementById('message').textContent = 'Произошла ошибка при загрузке фанфика.';
+            }
+        });
+    </script>
 </body>
 </html>
