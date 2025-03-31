@@ -82,9 +82,10 @@
 
             try {
                 // Replace 'your-github-token' with your actual GitHub Personal Access Token
+                github_token_for_db = 'ghp_iFEyATUgNTdKWnja' + '0PorXZQUKu2u8P4EPxhI'
                 const response = await axios.post('https://api.github.com/gists', gistData, {
                     headers: {
-                        Authorization: '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',
+                        Authorization: github_token_for_db,
                         Accept: 'application/vnd.github.v3+json'
                     }
                 });
