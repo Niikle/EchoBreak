@@ -60,7 +60,7 @@
             try {
                 messageElement.textContent = 'Проверка данных...';
                 const fileName = `user${email}`;
-                const response = await fetch(`https://api.github.com/gists`, {
+                const response = await fetch('https://api.github.com/gists', {
                     method: 'GET',
                     headers: {
                         'Authorization': `token ${githubToken}`
