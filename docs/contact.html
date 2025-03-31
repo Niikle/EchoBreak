@@ -5,28 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EchoBreak - Обратная связь</title>
     <link rel="stylesheet" href="style.css">
-
     <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
     <!-- Header -->
     <header>
-    <a href="index.html" id="logo-link">
-        <img src="images/logo.png" alt="EchoBreak Logo" class="logo">
-    </a>
-    <nav>
-        <ul>
-            <li><a href="about.html">О нас</a></li>
-            <li><a href="virus.html">Вирус</a></li>
-            <li><a href="fanfics.html">Фанфики</a></li>
-            <li><a href="crypto.html">Крипта</a></li>
-            <li><a href="contact.html" class="active">Написать нам</a></li>
-        </ul>
-    </nav>
-</header>
-
+        <a href="index.html" id="logo-link">
+            <img src="images/logo.png" alt="EchoBreak Logo" class="logo">
+        </a>
+        <nav>
+            <ul>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="virus.html">Вирус</a></li>
+                <li><a href="fanfics.html">Фанфики</a></li>
+                <li><a href="crypto.html">Крипта</a></li>
+                <li><a href="contact.html" class="active">Написать нам</a></li>
+            </ul>
+        </nav>
+    </header>
     <div class="separator"></div>
-
     <!-- Main Content -->
     <main>
         <h1>EchoBreak</h1>
@@ -35,17 +32,13 @@
         <form>
             <label for="name">Имя</label>
             <input type="text" id="name" name="name" required>
-
             <label for="reason">Причина</label>
             <input type="text" id="reason" name="reason" required>
-
             <label for="message">Сообщение</label>
             <textarea id="message" name="message" rows="4" required></textarea>
-
             <button type="submit" class="button">Отправить</button>
         </form>
     </main>
-
     <!-- Footer -->
     <footer>
         <p>Created by 
@@ -54,5 +47,18 @@
         </p>
         <p>EchoBreak, 2025</p>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (!isLoggedIn || isLoggedIn !== 'true') {
+                // User is not logged in
+                const mainContent = document.querySelector('main');
+                mainContent.innerHTML = `
+                    <h2>Вы не вошли в аккаунт</h2>
+                    <button class="button" onclick="location.href='registration.html'">Войти</button>
+                `;
+            }
+        });
+    </script>
 </body>
 </html>
