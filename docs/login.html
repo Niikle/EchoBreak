@@ -10,7 +10,7 @@
 <body>
     <!-- Header -->
     <header>
-        <a href="index.html" id="logo-link" class="active">
+        <a href="index.html" id="logo-link">
             <img src="images/logo.png" alt="EchoBreak Logo" class="logo">
         </a>
         <nav>
@@ -47,21 +47,56 @@
         <p>EchoBreak, 2025</p>
     </footer>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function (event) {
+        // GitHub Personal Access Token (Replace with your token)
+        const githubToken = 'ghp_iFEyATUgNTdKWnja' + '0PorXZQUKu2u8P4EPxhI';
+
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
             const messageElement = document.getElementById('message');
 
-            // Simulate login validation (replace with actual backend logic)
-            if (email === 'user@example.com' && password === 'password123') {
+            if (!email || !password) {
+                messageElement.textContent = 'Ошибка: Заполните все поля.';
+                return;
+            }
+
+            try {
+                messageElement.textContent = 'Проверка данных...';
+                const fileName = `user${email}`;
+                const response = await fetch(`https://api.github.com/gists`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `token ${githubToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при получении данных.');
+                }
+
+                const gists = await response.json();
+                const userGist = gists.find(gist => gist.files[fileName]);
+
+                if (!userGist) {
+                    messageElement.textContent = 'Ошибка: Пользователь не найден.';
+                    return;
+                }
+
+                const userData = JSON.parse(userGist.files[fileName].content);
+                if (userData.password !== password) {
+                    messageElement.textContent = 'Ошибка: Неверный пароль.';
+                    return;
+                }
+
+                // Set login flag
                 localStorage.setItem('isLoggedIn', 'true');
                 messageElement.textContent = 'Вы успешно вошли!';
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+                    window.location.href = 'index.html'; // Redirect to homepage
                 }, 2000);
-            } else {
-                messageElement.textContent = 'Ошибка: Неверный email или пароль.';
+            } catch (error) {
+                messageElement.textContent = `Ошибка: ${error.message}`;
             }
         });
     </script>
