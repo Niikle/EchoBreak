@@ -7,6 +7,7 @@
 #include <vector>
 #include <array>
 #include <memory>
+#include <iostream>
 
 #define PORT 6969
 #define BUFFER_SIZE 1024
