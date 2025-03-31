@@ -27,7 +27,7 @@ int main() {
     memset(&broadcastAddr, 0, sizeof(broadcastAddr));
     broadcastAddr.sin_family = AF_INET;
     broadcastAddr.sin_port = htons(PORT);
-    broadcastAddr.sin_addr.s_addr = inet_addr("172.17.212.255"); 
+    broadcastAddr.sin_addr.s_addr = inet_addr("172.17.213.255"); 
 
     std::string message;
     std::cout << "Enter the message in format(hostname;cmd/func(later);command): ";
