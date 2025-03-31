@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoBreak - Вход</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="index.html" id="logo-link" class="active">
+            <img src="images/logo.png" alt="EchoBreak Logo" class="logo">
+        </a>
+        <nav>
+            <ul>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="virus.html">Вирус</a></li>
+                <li><a href="fanfics.html">Фанфики</a></li>
+                <li><a href="crypto.html">Крипта</a></li>
+                <li><a href="contact.html">Написать нам</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="separator"></div>
+    <!-- Main Content -->
+    <main>
+        <h1>EchoBreak</h1>
+        <h2>Вход</h2>
+        <p>Пожалуйста, заполните форму ниже:</p>
+        <form id="loginForm">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" class="button">Войти</button>
+        </form>
+        <p id="message"></p>
+    </main>
+    <!-- Footer -->
+    <footer>
+        <p>Created by 
+            <a href="https://github.com/Andrew-24coop" target="_blank"><span>Andrew-24coop</span></a> and 
+            <a href="https://github.com/zen4xx" target="_blank"><span>zen4xx</span></a>
+        </p>
+        <p>EchoBreak, 2025</p>
+    </footer>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const messageElement = document.getElementById('message');
+
+            // Simulate login validation (replace with actual backend logic)
+            if (email === 'user@example.com' && password === 'password123') {
+                localStorage.setItem('isLoggedIn', 'true');
+                messageElement.textContent = 'Вы успешно вошли!';
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            } else {
+                messageElement.textContent = 'Ошибка: Неверный email или пароль.';
+            }
+        });
+    </script>
+</body>
+</html>
