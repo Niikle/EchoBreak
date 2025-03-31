@@ -82,7 +82,7 @@
                 const fileContent = userGist.files[fileName].content;
 
                 if (!fileContent) {
-                    messageElement.textContent = 'Ошибка: Файл пользователя пуст.';
+                    messageElement.textContent = 'Ошибка: Файл пользователя пуст. \n ${fileName} \n ${fileContent}';
                     return;
                 }
 
