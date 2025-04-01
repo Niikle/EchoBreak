@@ -93,8 +93,13 @@
                 // Debugging: Log the matching Gist
                 console.log('Matching Gist:', userGist);
 
-                const fileContent = userGist.files[fileName]?.content;
-
+                // const fileContent = userGist.files[fileName]?.content;
+                
+                const rawUrl = userGist.files[fileName]?.raw_url;
+                const fileResponse = await fetch(rawUrl);
+                if (fileResponse.ok) {
+                    const fileContent = await fileResponse.text();
+                }
                 if (!fileContent) {
                     messageElement.textContent = 'Ошибка: Файл пользователя пуст.';
                     return;
