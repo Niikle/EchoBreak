@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoBreak - Личный кабинет</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <!-- Add this script tag for making API requests -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="index.html" id="logo-link">
+            <img src="images/logo.png" alt="EchoBreak Logo" class="logo">
+        </a>
+        <nav>
+            <ul>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="virus.html">Вирус</a></li>
+                <li><a href="fanfics.html">Фанфики</a></li>
+                <li><a href="crypto.html">Крипта</a></li>
+                <li><a href="contact.html">Написать нам</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="separator"></div>
+    <!-- Main Content -->
+    <main>
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-button active" data-tab="profile">Личный кабинет</button>
+            <button class="tab-button" data-tab="fanfics">Мои фанфики</button>
+        </div>
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Profile Tab -->
+            <div id="profile-tab" class="tab-pane active">
+                <h2>Пользователь</h2>
+                <!-- User Avatar -->
+                <div class="avatar-container">
+                    <div class="avatar">
+                        <img src="images/avatar-placeholder.png" alt="Аватар пользователя" id="user-avatar">
+                    </div>
+                    <button class="button" id="addPhotoButton">Добавить фото</button>
+                </div>
+                <!-- Form for Personal Information -->
+                <form id="profileForm">
+                    <label for="name">Имя</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="activationKey">Ключ активации</label>
+                    <input type="text" id="activationKey" name="activationKey" required>
+
+                    <label for="email">Почта</label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" name="password" required>
+
+                    <button type="submit" class="button">Сохранить изменения</button>
+                    <button type="button" class="button" id="changePasswordButton">Сменить пароль</button>
+                </form>
+            </div>
+            <!-- Fanfics Tab -->
+            <div id="fanfics-tab" class="tab-pane">
+                <h2>Мои фанфики</h2>
+                <p>Здесь будут отображаться ваши фанфики.</p>
+            </div>
+        </div>
+    </main>
+    <!-- Footer -->
+    <footer>
+        <p>Created by 
+            <a href="https://github.com/Andrew-24coop" target="_blank"><span>Andrew-24coop</span></a> and 
+            <a href="https://github.com/zen4xx" target="_blank"><span>zen4xx</span></a>
+        </p>
+        <p>EchoBreak, 2025</p>
+    </footer>
+    <script>
+        // JavaScript for handling tabs
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Remove 'active' class from all tab buttons and panes
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabPanes.forEach(pane => pane.classList.remove('active'));
+
+                    // Add 'active' class to the clicked button and its corresponding pane
+                    this.classList.add('active');
+                    const targetTab = this.getAttribute('data-tab');
+                    document.getElementById(`${targetTab}-tab`).classList.add('active');
+                });
+            });
+
+            // Placeholder for handling avatar upload
+            document.getElementById('addPhotoButton').addEventListener('click', function () {
+                alert('Функция добавления аватара будет реализована позже.');
+            });
+
+            // Placeholder for changing password
+            document.getElementById('changePasswordButton').addEventListener('click', function () {
+                alert('Функция смены пароля будет реализована позже.');
+            });
+        });
+    </script>
+</body>
+</html>
