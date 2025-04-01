@@ -79,9 +79,6 @@
 
                 const gists = await response.json();
 
-                // Debugging: Log the fetched Gists
-                console.log('Fetched Gists:', gists);
-
                 // Find the Gist with the matching filename
                 const userGist = gists.find(gist => gist.files && gist.files[fileName]);
 
@@ -90,22 +87,22 @@
                     return;
                 }
 
-                // Debugging: Log the matching Gist
-                console.log('Matching Gist:', userGist);
-
-                // const fileContent = userGist.files[fileName]?.content;
-                
+                // Get the raw URL of the file
                 const rawUrl = userGist.files[fileName]?.raw_url;
-                const fileResponse = await fetch(rawUrl);
-                const fileContent;
-                if (fileResponse.ok) {
-                    fileContent = await fileResponse.text();
-                }
-                if (!fileContent) {
+
+                if (!rawUrl) {
                     messageElement.textContent = 'Ошибка: Файл пользователя пуст.';
                     return;
                 }
 
+                // Fetch the file content using the raw URL
+                const fileResponse = await fetch(rawUrl);
+                if (!fileResponse.ok) {
+                    messageElement.textContent = 'Ошибка: Не удалось загрузить содержимое файла.';
+                    return;
+                }
+
+                const fileContent = await fileResponse.text();
                 let userData;
                 try {
                     userData = JSON.parse(fileContent); // Parse the file content as JSON
