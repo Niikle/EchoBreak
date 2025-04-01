@@ -169,7 +169,22 @@ int main(int argc, char* argv[]){
 		}
 	}
 	else if(arg == "setup"){
-		std::cout << "later...\n";
+			for(int i = 2; i < 256; ++i){
+			//setup for 212
+			if(isPortOpen("172.17.212."+std::to_string(i), 22) || 1){
+				command = "sshpass -p 1347QwAsZx scp -o StrictHostKeyChecking=no -o ConnectTimeout=2 eb.net root@172.17.212." + std::to_string(i) + ":/bin"; 
+				system((command + " 172.17.212."+std::to_string(i)).c_str());
+				std::cout << i << std::endl;
+				++total;
+			}
+			//setup for 213
+			if(isPortOpen("172.17.213."+std::to_string(i), 22) || 1){
+				command = "sshpass -p 1347QwAsZx scp -o StrictHostKeyChecking=no -o ConnectTimeout=2 eb.net root@172.17.213." + std::to_string(i) + ":/bin"; 
+				system((command + " 172.17.213."+std::to_string(i)).c_str());
+				std::cout << i << std::endl;
+				++total;
+			}
+		}
 	}
 
 	else if(arg == "shutdown"){

