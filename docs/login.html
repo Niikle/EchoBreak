@@ -97,8 +97,9 @@
                 
                 const rawUrl = userGist.files[fileName]?.raw_url;
                 const fileResponse = await fetch(rawUrl);
+                const fileContent;
                 if (fileResponse.ok) {
-                    const fileContent = await fileResponse.text();
+                    fileContent = await fileResponse.text();
                 }
                 if (!fileContent) {
                     messageElement.textContent = 'Ошибка: Файл пользователя пуст.';
