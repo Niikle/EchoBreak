@@ -133,9 +133,12 @@
 
                 // Handle Activation Key Section
                 const activationKeySection = document.getElementById('activationKeySection');
-                const userToken = localStorage.getItem('userToken') || userData.userToken || '';
+                let userToken = localStorage.getItem('userToken') || userData.userToken || '';
 
-                if (!userToken) {
+                // Ensure userToken is treated as an empty string if undefined or null
+                userToken = userToken.trim() === '' ? '' : userToken;
+
+                if (userToken === '') {
                     // Display text field for entering activation key
                     activationKeySection.innerHTML = `
                         <label for="userTokenID">Ключ активации</label>
@@ -193,8 +196,7 @@
                     let activationKeyHTML = '';
                     if (userToken === 'rejected') {
                         activationKeyHTML = `
-                            <p>Ключ активации: </p>
-                            <p style="color: #d25354;">${userToken}</p>
+                            <p style="color: #d25354;">Ключ активации: ${userToken}</p>
                         `;
                     } else {
                         activationKeyHTML = `
