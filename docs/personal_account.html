@@ -214,6 +214,12 @@
                     localStorage.removeItem('userEmail');
                     window.location.href = 'index.html'; // Redirect to homepage
                 });
+
+                // Add event listener for change password button
+                const changePasswordButton = document.getElementById('changePasswordButton');
+                changePasswordButton.addEventListener('click', function () {
+                    window.location.href = 'change_password.html'; // Redirect to change password page
+                });
             } catch (error) {
                 const mainContent = document.querySelector('main');
                 mainContent.innerHTML = `
