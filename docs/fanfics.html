@@ -83,10 +83,13 @@
 
                 // Display the list of Gists
                 for (const gist of gists) {
-                    const gistItem = document.createElement('div');
-                    gistItem.classList.add('gist-item');
-
                     const title = gist.description || 'Без названия';
+
+                    // Check if the title starts with "user" (case-insensitive)
+                    if (/^user/i.test(title)) {
+                        continue; // Skip this Gist and move to the next one
+                    }
+
                     const createdAt = new Date(gist.created_at).toLocaleString('ru-RU'); // Format date and time
 
                     // Extract the first file's raw URL for fetching content
@@ -107,6 +110,9 @@
                     } catch (fileError) {
                         fileContentPreview = `Ошибка: ${fileError.message}`;
                     }
+
+                    const gistItem = document.createElement('div');
+                    gistItem.classList.add('gist-item');
 
                     gistItem.innerHTML = `
                         <h3>${title}</h3>
