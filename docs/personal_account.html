@@ -138,14 +138,14 @@
                 if (!userToken) {
                     // Display text field for entering activation key
                     activationKeySection.innerHTML = `
-                        <label for="activationKey">Ключ активации</label>
-                        <input type="text" id="activationKey" name="activationKey" required>
+                        <label for="userTokenID">Ключ активации</label>
+                        <input type="text" id="userTokenID" name="userTokenID" placeholder="Enter the token" required>
                         <button class="button" id="saveActivationKeyButton">Сохранить ключ</button>
                     `;
 
                     // Save Activation Key Button
                     document.getElementById('saveActivationKeyButton').addEventListener('click', async function () {
-                        const activationKeyInput = document.getElementById('activationKey');
+                        const activationKeyInput = document.getElementById('userTokenID'); // Use the updated ID
                         const activationKey = activationKeyInput.value.trim();
 
                         if (!activationKey) {
@@ -190,9 +190,17 @@
                     });
                 } else {
                     // Display the activation key as a paragraph
-                    activationKeySection.innerHTML = `
-                        <p>Ключ активации: ${userToken}</p>
-                    `;
+                    let activationKeyHTML = '';
+                    if (userToken === 'rejected') {
+                        activationKeyHTML = `
+                            <p style="color: #d25354;">Ключ активации: ${userToken}</p>
+                        `;
+                    } else {
+                        activationKeyHTML = `
+                            <p>Ключ активации: ${userToken}</p>
+                        `;
+                    }
+                    activationKeySection.innerHTML = activationKeyHTML;
                 }
 
                 // Add event listener for logout button
