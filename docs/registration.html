@@ -10,7 +10,7 @@
 <body>
     <!-- Header -->
     <header>
-        <a href="index.html" id="logo-link">
+        <a href="index.html" id="logo-link" class="active">
             <img src="images/logo.png" alt="EchoBreak Logo" class="logo">
         </a>
         <nav>
@@ -23,7 +23,6 @@
             </ul>
         </nav>
     </header>
-    <!-- Separator Line -->
     <div class="separator"></div>
     <!-- Main Content -->
     <main>
@@ -38,17 +37,18 @@
             <label for="password">Пароль</label>
             <input type="password" id="password" name="password" required>
             <button type="submit" class="button">Зарегистрироваться</button>
+            <button type="button" class="button" onclick="location.href='login.html'">Войти</button>
         </form>
+        <p id="message"></p>
     </main>
     <!-- Footer -->
     <footer>
-        <p>Created by 
-            <a href="https://github.com/Andrew-24coop" target="_blank"><span>Andrew-24coop</span></a> and 
-            <a href="https://github.com/zen4xx" target="_blank"><span>zen4xx</span></a>
-        </p>
         <p>EchoBreak, 2025</p>
     </footer>
     <script>
+        // GitHub Personal Access Token (Replace with your token)
+        const githubToken = 'ghp_iFEyATUgNTdKWnja' + '0PorXZQUKu2u8P4EPxhI';
+
         document.getElementById('registerForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const name = document.getElementById('reg-name').value.trim();
@@ -62,13 +62,32 @@
             }
 
             try {
-                messageElement.textContent = 'Регистрация...';
+                messageElement.textContent = 'Проверка данных...';
+                const fileName = `user${email}`;
 
-                // Replace with your GitHub Personal Access Token
-                const githubToken = 'ghp_iFEyATUgNTdKWnja' + '0PorXZQUKu2u8P4EPxhI';
-
-                // Create a new Gist for the user
+                // Fetch all Gists to check if the user already exists
                 const response = await fetch('https://api.github.com/gists', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `token ${githubToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при получении данных.');
+                }
+
+                const gists = await response.json();
+                const userGist = gists.find(gist => gist.files && gist.files[fileName]);
+
+                if (userGist) {
+                    messageElement.textContent = 'Ошибка: Пользователь с таким email уже зарегистрирован.';
+                    return;
+                }
+
+                // Create a new Gist for the user with an empty userToken field
+                messageElement.textContent = 'Регистрация...';
+                const createResponse = await fetch('https://api.github.com/gists', {
                     method: 'POST',
                     headers: {
                         'Authorization': `token ${githubToken}`,
@@ -76,22 +95,17 @@
                     },
                     body: JSON.stringify({
                         description: `User registration for ${email}`,
-                        public: false,
+                        public: false, // Keep the registration data private
                         files: {
-                            [`user${email}`]: {
-                                content: JSON.stringify({
-                                    name,
-                                    email,
-                                    password,
-                                    userToken: '' // Default empty userToken
-                                })
+                            [fileName]: { // Use "user" + email as the filename
+                                content: JSON.stringify({ name, email, password, userToken: '' }) // Add empty userToken
                             }
                         }
                     })
                 });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
+                if (!createResponse.ok) {
+                    const errorData = await createResponse.json();
                     throw new Error(`Ошибка: ${errorData.message}`);
                 }
 
