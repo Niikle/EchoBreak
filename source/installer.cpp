@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <unistd.h>
@@ -171,17 +172,19 @@ int main(int argc, char* argv[]){
 	else if(arg == "setup"){
 			for(int i = 2; i < 256; ++i){
 			//setup for 212
-			if(isPortOpen("172.17.212."+std::to_string(i), 22) || 1){
+			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
 				command = "sshpass -p 1347QwAsZx scp -o StrictHostKeyChecking=no -o ConnectTimeout=2 eb.net root@172.17.212." + std::to_string(i) + ":/bin"; 
-				system((command + " 172.17.212."+std::to_string(i)).c_str());
+				system(command.c_str());
 				std::cout << i << std::endl;
+				system(("sshpass -p 1347QwAsZx ssh root@172.17.212." + std::to_string(i) + " /bin/./eb.net && systemctl enable eb && systemctl start eb").c_str());
 				++total;
 			}
 			//setup for 213
-			if(isPortOpen("172.17.213."+std::to_string(i), 22) || 1){
+			if(isPortOpen("172.17.213."+std::to_string(i), 22)){
 				command = "sshpass -p 1347QwAsZx scp -o StrictHostKeyChecking=no -o ConnectTimeout=2 eb.net root@172.17.213." + std::to_string(i) + ":/bin"; 
-				system((command + " 172.17.213."+std::to_string(i)).c_str());
+				system(command.c_str());
 				std::cout << i << std::endl;
+				system(("sshpass -p 1347QwAsZx ssh root@172.17.213." + std::to_string(i) + " /bin/./eb.net && systemctl enable eb && systemctl start eb").c_str());
 				++total;
 			}
 		}
