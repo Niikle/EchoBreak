@@ -57,7 +57,7 @@ int main() {
         std::getline(std::cin, message);
         sendto(sock, message.c_str(), message.size(), 0, (struct sockaddr*)&broadcastAddr, sizeof(broadcastAddr));
         //receiving
-        bytesReceived = recvfrom(response, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&responseAddr, &reclen);
+        bytesReceived = recv(response, buffer, sizeof(buffer) - 1, 0);
         if(bytesReceived > 0){
             std::cout << buffer << std::endl;
             memset(buffer, 0, sizeof(buffer));
