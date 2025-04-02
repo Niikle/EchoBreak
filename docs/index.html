@@ -12,7 +12,7 @@
 
     <!-- Header -->
     <header>
-        <a href="index.html" id="logo-link" class="active">
+        <a href="personal_account.html" id="logo-link" class="active">
             <img src="images/logo.png" alt="EchoBreak Logo" class="logo">
         </a>
         <nav>
@@ -34,6 +34,8 @@
         <h1>EchoBreak</h1>
         <h2>Главная</h2>
         <!-- Add more content as needed -->
+        <h3>main page</h3>
+        <p>${content}</p>
     </main>
 
     <!-- Footer -->
@@ -47,47 +49,5 @@
         </p>
         <p>EchoBreak, 2025</p>
     </footer>
-
-    <!-- JavaScript for Alternating Logo Link -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const logoLink = document.getElementById('logo-link');
-            let currentLink = 'registration.html';
-
-            // Check if the user is logged in
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-
-            if (isLoggedIn && isLoggedIn === 'true') {
-                // User is logged in; redirect to personal_account.html
-                logoLink.classList.remove('active');
-                logoLink.href = 'personal_account.html';
-                currentLink = 'personal_account.html';
-            } else {
-                // User is not logged in; redirect to registration.html
-                logoLink.classList.add('active');
-                logoLink.href = 'registration.html';
-                currentLink = 'registration.html';
-            }
-
-            logoLink.addEventListener('click', function (event) {
-                // Prevent default navigation
-                event.preventDefault();
-
-                // Toggle between index.html and the appropriate page based on login status
-                if (currentLink === 'index.html') {
-                    currentLink = isLoggedIn === 'true' ? 'personal_account.html' : 'registration.html';
-                } else {
-                    currentLink = 'index.html';
-                }
-
-                // Update the href attribute
-                logoLink.href = currentLink;
-
-                // Navigate to the new link
-                window.location.href = currentLink;
-            });
-        });
-    </script>
-
 </body>
 </html>
