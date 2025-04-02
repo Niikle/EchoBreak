@@ -45,6 +45,10 @@
                 <h3>Пароль: ${passwd_pub}</h3>
                 <!-- Logout Button -->
                 <button class="button" id="logoutButton">Выйти</button>
+                <!-- Change Password Button -->
+                <button class="button" id="changePasswordButton">Сменить пароль</button>
+                <!-- Activation Key Section -->
+                <div id="activationKeySection"></div>
             </div>
         </div>
     </main>
@@ -126,6 +130,70 @@
                 document.querySelector('#profile-tab h3:nth-of-type(1)').textContent = `Имя: ${userData.name}`;
                 document.querySelector('#profile-tab h3:nth-of-type(2)').textContent = `Почта: ${userData.email}`;
                 document.querySelector('#profile-tab h3:nth-of-type(3)').textContent = `Пароль: ${'*'.repeat(userData.password.length)}`; // Mask the password
+
+                // Handle Activation Key Section
+                const activationKeySection = document.getElementById('activationKeySection');
+                const userToken = localStorage.getItem('userToken') || userData.userToken || '';
+
+                if (!userToken) {
+                    // Display text field for entering activation key
+                    activationKeySection.innerHTML = `
+                        <label for="activationKey">Ключ активации</label>
+                        <input type="text" id="activationKey" name="activationKey" required>
+                        <button class="button" id="saveActivationKeyButton">Сохранить ключ</button>
+                    `;
+
+                    // Save Activation Key Button
+                    document.getElementById('saveActivationKeyButton').addEventListener('click', async function () {
+                        const activationKeyInput = document.getElementById('activationKey');
+                        const activationKey = activationKeyInput.value.trim();
+
+                        if (!activationKey) {
+                            alert('Введите ключ активации.');
+                            return;
+                        }
+
+                        // Update the user's Gist file with the activation key
+                        const updatedUserData = { ...userData, userToken: activationKey };
+                        const updatedFileContent = JSON.stringify(updatedUserData);
+
+                        try {
+                            const updateResponse = await fetch(userGist.url, {
+                                method: 'PATCH',
+                                headers: {
+                                    'Authorization': `token ${githubToken}`,
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    files: {
+                                        [fileName]: {
+                                            content: updatedFileContent
+                                        }
+                                    }
+                                })
+                            });
+
+                            if (!updateResponse.ok) {
+                                throw new Error('Ошибка при обновлении данных.');
+                            }
+
+                            // Save the activation key to localStorage
+                            localStorage.setItem('userToken', activationKey);
+
+                            // Update the UI
+                            activationKeySection.innerHTML = `
+                                <p>Ключ активации: ${activationKey}</p>
+                            `;
+                        } catch (error) {
+                            alert(`Ошибка: ${error.message}`);
+                        }
+                    });
+                } else {
+                    // Display the activation key as a paragraph
+                    activationKeySection.innerHTML = `
+                        <p>Ключ активации: ${userToken}</p>
+                    `;
+                }
 
                 // Add event listener for logout button
                 const logoutButton = document.getElementById('logoutButton');
