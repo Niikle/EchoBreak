@@ -133,7 +133,7 @@
 
                 // Handle Activation Key Section
                 const activationKeySection = document.getElementById('activationKeySection');
-                let userToken = localStorage.getItem('userToken') || userData.userToken || '';
+                let userToken = userData.userToken || '';
 
                 // Ensure userToken is treated as an empty string if undefined or null
                 userToken = userToken.trim() === '' ? '' : userToken;
