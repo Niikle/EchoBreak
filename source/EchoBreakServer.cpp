@@ -18,7 +18,7 @@ int main() {
     }
 
     //enable broadcast
-    bool broadcastEnable = 1;
+    int broadcastEnable = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable)) < 0) {
         std::cerr << "Error setting socket options" << std::endl;
         close(sock);
