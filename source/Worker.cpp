@@ -100,7 +100,7 @@ int main() {
                     sendto(sock, answ.c_str(), answ.size(), 0, (struct sockaddr*)&broadcastAddr, addrLen);
                 }
                 else if(msg[1] == "open url"){
-                        system((std::string("xdg-open ") + msg[2]).c_str());
+                        system((std::string("pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY xdg-open ") + msg[2]).c_str());
                 }
             }
             memset(buffer, 0, sizeof(buffer));
