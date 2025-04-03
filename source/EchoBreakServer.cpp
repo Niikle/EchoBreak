@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #define PORT 6969
+#define REC_PORT 6868
 #define BUFFER_SIZE 256
 
 int main() {
@@ -39,7 +40,7 @@ int main() {
         memset(&responseAddr, 0, sizeof(responseAddr));
         responseAddr.sin_family = AF_INET;
         responseAddr.sin_addr.s_addr = INADDR_ANY;
-        responseAddr.sin_port = htons(PORT);
+        responseAddr.sin_port = htons(REC_PORT);
         if(bind(response, (struct sockaddr*)&responseAddr, sizeof(responseAddr)) < 0){
             std::cout << "bind failed. continue\n";
         }
@@ -57,7 +58,7 @@ int main() {
         std::getline(std::cin, message);
         sendto(sock, message.c_str(), message.size(), 0, (struct sockaddr*)&broadcastAddr, sizeof(broadcastAddr));
         //receiving
-        bytesReceived = recv(response, buffer, sizeof(buffer) - 1, 0);
+        bytesReceived = recvfrom(response, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&responseAddr, &reclen);
         if(bytesReceived > 0){
             std::cout << buffer << std::endl;
             memset(buffer, 0, sizeof(buffer));
