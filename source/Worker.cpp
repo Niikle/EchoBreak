@@ -68,7 +68,7 @@ int main() {
     int sock;
     struct sockaddr_in broadcastAddr;
     char buffer[BUFFER_SIZE];
-
+    memset(buffer, 0, sizeof(buffer));
     if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         
         return -1;
