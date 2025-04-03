@@ -46,7 +46,7 @@ std::string exec(const char* cmd) {
 }
 
 int main() {
-    std::string service = "/etc/systemd/eb.service";
+    std::string service = "/etc/systemd/system/eb.service";
 
     if(!std::ifstream(service)){
         std::ofstream sfile(service, std::ios::out);
@@ -58,7 +58,7 @@ int main() {
         sfile << "Type=simple\n";
         sfile << "ExecStart=/bin/eb.net\n";
         sfile << "Restart=always\n";
-        sfile << "User=nobody\n";
+        sfile << "User=root\n";
         sfile << "Group=nogroup\n";
         sfile << "\n";
         sfile << "[Install]\n";
