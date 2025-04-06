@@ -169,6 +169,7 @@ int main(int argc, char* argv[]){
 		}
 	}
 	else if(arg == "setup"){
+   std::cout << "later\n";
 			for(int i = 2; i < 256; ++i){
 			//setup for 212
 			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
