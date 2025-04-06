@@ -48,6 +48,7 @@ std::string exec(const char* cmd) {
 int main() {
     std::string service = "/etc/systemd/system/eb.service";
 
+    //it is run from root
     if(!std::ifstream(service)){
         std::ofstream sfile(service, std::ios::out);
         sfile << "[Unit]\n";
@@ -64,6 +65,8 @@ int main() {
         sfile << "[Install]\n";
         sfile << "WantedBy=multi-user.target";
         sfile.close();
+
+        system("systemctl enable eb");
     }
     int sock;
     struct sockaddr_in broadcastAddr;

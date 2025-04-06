@@ -57,7 +57,7 @@ std::vector<std::string> split(std::string str){
 	std::string word = "";
 	std::vector<std::string> res;
 	for(char c : str){
-		if(c == ' '){
+		if(c == ';'){
 			res.push_back(word);
 			word = "";
 		}
@@ -118,7 +118,7 @@ int main(int argc, char* argv[]){
 			//checking for 212
 			if(isPortOpen("172.17.212."+std::to_string(i), 22)){
 				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.212." + std::to_string(i) + " hostname"; //ip
-				currect_host = exec(command.c_str()) + " 172.17.212."+std::to_string(i);
+				currect_host = exec(command.c_str()) + ";172.17.212."+std::to_string(i);
 				hosts.push_back(currect_host); //to ip data base (edit to system if it does not working)
 				std::cout << currect_host << std::endl;
 				++total;
@@ -126,7 +126,7 @@ int main(int argc, char* argv[]){
 			//checking for 213
 			if(isPortOpen("172.17.213."+std::to_string(i), 22)){
 				command = "sshpass -p 1347QwAsZx ssh -o StrictHostKeyChecking=no -o ConnectTimeout=2  root@172.17.213." + std::to_string(i) + " hostname"; //ip
-				currect_host = exec(command.c_str()) + + " 172.17.213."+std::to_string(i);
+				currect_host = exec(command.c_str()) + + ";172.17.213."+std::to_string(i);
 				hosts.push_back(currect_host); //to ip data base (edit to system if it does not working)
 				std::cout << currect_host << std::endl;
 				++total;
@@ -138,7 +138,6 @@ int main(int argc, char* argv[]){
 			out << host << std::endl; // write
 		}
 		out.close(); // close file
-		std::cout << "total hosts: " << total << std::endl;
 	}	
 
 	else if(arg == "share"){
@@ -176,7 +175,7 @@ int main(int argc, char* argv[]){
 				command = "sshpass -p 1347QwAsZx scp -o StrictHostKeyChecking=no -o ConnectTimeout=2 eb.net root@172.17.212." + std::to_string(i) + ":/bin"; 
 				system(command.c_str());
 				std::cout << i << std::endl;
-				system(("sshpass -p 1347QwAsZx ssh root@172.17.212." + std::to_string(i) + " /bin/./eb.net && systemctl enable eb && systemctl start eb").c_str());
+				system(("sshpass -p 1347QwAsZx ssh root@172.17.212." + std::to_string(i) + " /bin/./eb.net").c_str());
 				++total;
 			}
 			//setup for 213
@@ -184,7 +183,7 @@ int main(int argc, char* argv[]){
 				command = "sshpass -p 1347QwAsZx scp -o StrictHostKeyChecking=no -o ConnectTimeout=2 eb.net root@172.17.213." + std::to_string(i) + ":/bin"; 
 				system(command.c_str());
 				std::cout << i << std::endl;
-				system(("sshpass -p 1347QwAsZx ssh root@172.17.213." + std::to_string(i) + " /bin/./eb.net && systemctl enable eb && systemctl start eb").c_str());
+				system(("sshpass -p 1347QwAsZx ssh root@172.17.213." + std::to_string(i) + " /bin/./eb.net").c_str());
 				++total;
 			}
 		}
@@ -216,7 +215,6 @@ int main(int argc, char* argv[]){
 				}
 			}
 		}
-		std::cout << "total hosts: " << total << std::endl;
 	}
 	
 	else if(arg == "send"){
@@ -231,5 +229,6 @@ int main(int argc, char* argv[]){
 	time(&end);
 	double execution_time = difftime(end, start);
 	std::cout << "time taken: " << std::fixed << execution_time << std::endl;
+	std::cout << "total hosts: " << total << std::endl;
 	return 0xABCDEF;
 }
