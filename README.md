@@ -1,4 +1,2 @@
-# DO NOT USE IT!!!
-**ONLY FOR Andrew-24coop and zen4xx**
-
-**EXIT IMMEDIATELY**
+# EchoBreak
+We are not responsible for your actions.
