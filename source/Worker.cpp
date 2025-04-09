@@ -85,6 +85,7 @@ int main() {
     if (bind(sock, (struct sockaddr*)&broadcastAddr, sizeof(broadcastAddr)) < 0) {
         std::ofstream log("log", std::ios::out);
         log << "binding err";
+	log.close();
         close(sock);
         return -1;
     }
