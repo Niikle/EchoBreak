@@ -61,12 +61,25 @@
                     <h2>Вы не вошли в аккаунт</h2>
                     <button class="button" onclick="location.href='registration.html'">Войти</button>
                 `;
+                return;
             }
 
             document.getElementById('contact-form').addEventListener('submit', function(event) {
                 event.preventDefault();
 
-                const userEmail = localStorage.getItem('userEmail') || 'no_email@example.com';
+                const userEmail = localStorage.getItem('userEmail');
+                const emailTimestamp = localStorage.getItem('emailTimestamp');
+
+                const currentTime = Date.now();
+                const timeoutDuration = 24 * 60 * 60 * 1000;
+                if (!userEmail || !emailTimestamp || (currentTime - emailTimestamp > timeoutDuration)) {
+                    alert('Время действия сессии истекло. Пожалуйста, войдите снова.');
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('userEmail');
+                    localStorage.removeItem('emailTimestamp');
+                    location.href = 'registration.html';
+                    return;
+                }
 
                 const formData = new FormData(this);
 
