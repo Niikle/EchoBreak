@@ -66,7 +66,7 @@
             document.getElementById('contact-form').addEventListener('submit', function(event) {
                 event.preventDefault();
 
-                const userEmail = localStorage.getItem('userEmail');
+                const userEmail = localStorage.getItem('userEmail') || 'no_email@example.com';
 
                 const formData = new FormData(this);
 
