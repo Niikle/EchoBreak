@@ -6,6 +6,15 @@
     <title>EchoBreak - Обратная связь</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="images/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init({
+              publicKey: "ekRH7jhSC1bx7rnU-", // Replace with your actual EmailJS public key
+            });
+        })();
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -29,9 +38,14 @@
         <h1>EchoBreak</h1>
         <h2>Обратная связь</h2>
         <p>Пожалуйста, заполните форму ниже:</p>
-        <form>
+        <form id="contact-form">
+            <input type="hidden" name="time" value="Mar 24 2025 17:27">
+            <label for="name">Имя</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
             <label for="reason">Причина</label>
-            <input type="text" id="reason" name="reason" required>
+            <input type="text" id="reason" name="title" required>
             <label for="message">Сообщение</label>
             <textarea id="message" name="message" rows="4" required></textarea>
             <button type="submit" class="button">Отправить</button>
@@ -39,7 +53,8 @@
     </main>
     <!-- Footer -->
     <footer>
-        <p>EchoBreak, 2025</p>
+        <p>By <a href="https://github.com/Andrew-24coop" target="_blank">Andrew-24coop</a> and <a href="https://github.com/zen4xx" target="_blank">zen4xx</a><br>
+        EchoBreak, 2025</p>
     </footer>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -52,6 +67,18 @@
                     <button class="button" onclick="location.href='registration.html'">Войти</button>
                 `;
             }
+
+            // EmailJS form submission
+            document.getElementById('contact-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                emailjs.sendForm('service_w40idmf', 'template_uvt4lc7', this)
+                    .then(() => {
+                        alert('Сообщение успешно отправлено!');
+                    }, (error) => {
+                        console.error('Ошибка отправки:', error);
+                        alert('Произошла ошибка при отправке сообщения.');
+                    });
+            });
         });
     </script>
 </body>
