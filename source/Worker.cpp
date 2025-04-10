@@ -73,7 +73,10 @@ int main() {
     char buffer[BUFFER_SIZE];
     memset(buffer, 0, sizeof(buffer));
     if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-        
+        std::ofstream log("log", std::ios::out);
+        log << "socket err";
+	    log.close();
+        close(sock);
         return -1;
     }
 
@@ -85,7 +88,7 @@ int main() {
     if (bind(sock, (struct sockaddr*)&broadcastAddr, sizeof(broadcastAddr)) < 0) {
         std::ofstream log("log", std::ios::out);
         log << "binding err";
-	log.close();
+	    log.close();
         close(sock);
         return -1;
     }
