@@ -11,7 +11,7 @@
     <script type="text/javascript">
         (function() {
             emailjs.init({
-              publicKey: "ekRH7jhSC1bx7rnU-", // Replace with your actual EmailJS public key
+              publicKey: "ekRH7jhSC1bx7rnU-",
             });
         })();
     </script>
@@ -40,8 +40,6 @@
         <p>Пожалуйста, заполните форму ниже:</p>
         <form id="contact-form">
             <input type="hidden" name="time" value="Mar 24 2025 17:27">
-            <label for="name">Имя</label>
-            <input type="text" id="name" name="name" required>
             <label for="reason">Причина</label>
             <input type="text" id="reason" name="title" required>
             <label for="message">Сообщение</label>
@@ -58,7 +56,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             if (!isLoggedIn || isLoggedIn !== 'true') {
-                // User is not logged in
                 const mainContent = document.querySelector('main');
                 mainContent.innerHTML = `
                     <h2>Вы не вошли в аккаунт</h2>
@@ -66,17 +63,22 @@
                 `;
             }
 
-            // EmailJS form submission
             document.getElementById('contact-form').addEventListener('submit', function(event) {
                 event.preventDefault();
 
-                // Add the fixed email address to the form data
-                const formData = new FormData(this);
-                alert(formData);
-                formData.append('email', 'andyspacex10@gmail.com');
+                const userEmail = localStorage.getItem('userEmail');
 
-                // Send the form data using EmailJS
-                emailjs.sendForm('service_w40idmf', 'template_uvt4lc7', formData)
+                const formData = new FormData(this);
+
+                const emailData = {
+                    name: userEmail,
+                    title: formData.get('title'),
+                    message: formData.get('message'),
+                    time: formData.get('time'),
+                    email: 'andyspacex10@gmail.com'
+                };
+
+                emailjs.send('service_w40idmf', 'template_uvt4lc7', emailData)
                     .then(() => {
                         alert('Сообщение успешно отправлено!');
                     }, (error) => {
