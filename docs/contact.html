@@ -67,19 +67,17 @@
             document.getElementById('contact-form').addEventListener('submit', function(event) {
                 event.preventDefault();
 
-                const userEmail = localStorage.getItem('userEmail');
-                const emailTimestamp = localStorage.getItem('emailTimestamp');
-
+                const lastSentTimestamp = localStorage.getItem('lastEmailSent');
                 const currentTime = Date.now();
                 const timeoutDuration = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
-                if (!userEmail || !emailTimestamp || (currentTime - emailTimestamp > timeoutDuration)) {
-                    alert(`Попробуйте снова через ${timeoutDuration - emailTimestamp}`);
-                    console.log(emailTimestamp);
-                    location.href = 'registration.html';
+                if (lastSentTimestamp && (currentTime - lastSentTimestamp < timeoutDuration)) {
+                    const remainingTime = Math.ceil((timeoutDuration - (currentTime - lastSentTimestamp)) / 1000 / 60);
+                    alert(`Вы уже отправили сообщение. Попробуйте снова через ${remainingTime} минут.`);
                     return;
                 }
 
+                const userEmail = localStorage.getItem('userEmail') || 'no_email@example.com';
                 const formData = new FormData(this);
 
                 const emailData = {
@@ -93,6 +91,7 @@
                 emailjs.send('service_w40idmf', 'template_uvt4lc7', emailData)
                     .then(() => {
                         alert('Сообщение успешно отправлено!');
+                        localStorage.setItem('lastEmailSent', currentTime); // Update the timestamp
                     }, (error) => {
                         console.error('Ошибка отправки:', error);
                         alert('Произошла ошибка при отправке сообщения.');
