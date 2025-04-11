@@ -6,8 +6,6 @@
     <title>EchoBreak - Фанфики</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="images/favicon.png">
-
-    <!-- Add this script tag for making API requests -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
@@ -37,8 +35,18 @@
         <!-- Button to Redirect to Upload Page -->
         <button type="createFanfic" class="button" onclick="window.location.href='uploadFanfic.html'">Загрузить фанфик</button>
 
-        <!-- List of Gists -->
-        <div id="gistsList"></div>
+        <!-- Grid Container for Fanfics -->
+        <div id="gistsList" class="fanfic-grid"></div>
+
+        <!-- Modal for Displaying Fanfic Content -->
+        <div id="fanficModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2 id="fanficTitle"></h2>
+                <p id="fanficAuthorDate"></p>
+                <div id="fanficContent"></div>
+            </div>
+        </div>
     </main>
 
     <!-- Footer -->
@@ -84,12 +92,6 @@
                 // Display the list of Gists
                 for (const gist of gists) {
                     const title = gist.description || 'Без названия';
-
-                    // Check if the title starts with "user" (case-insensitive)
-                    if (/^user/i.test(title)) {
-                        continue; // Skip this Gist and move to the next one
-                    }
-
                     const createdAt = new Date(gist.created_at).toLocaleString('ru-RU'); // Format date and time
 
                     // Extract the first file's raw URL for fetching content
@@ -97,35 +99,108 @@
                     const firstFile = gist.files[fileKeys[0]];
                     const rawUrl = firstFile.raw_url;
 
-                    // Fetch the file content from the raw URL
-                    let fileContentPreview = 'Ошибка при загрузке содержимого';
-                    try {
-                        const fileResponse = await fetch(rawUrl);
-                        if (fileResponse.ok) {
-                            const fileContent = await fileResponse.text();
-                            fileContentPreview = fileContent.slice(0, 100) + (fileContent.length > 100 ? '...' : '');
-                        } else {
-                            fileContentPreview = 'Не удалось загрузить содержимое файла';
-                        }
-                    } catch (fileError) {
-                        fileContentPreview = `Ошибка: ${fileError.message}`;
+                    // Skip Gists starting with "user" or "$"
+                    if (/^(user|\$)/i.test(fileKeys[0])) {
+                        continue;
                     }
 
-                    const gistItem = document.createElement('div');
-                    gistItem.classList.add('gist-item');
+                    // Create a fanfic card
+                    const fanficCard = document.createElement('div');
+                    fanficCard.classList.add('fanfic-card');
 
-                    gistItem.innerHTML = `
-                        <h3>${title}</h3>
-                        <p><strong>Дата создания:</strong> ${createdAt}</p>
-                        <p><strong>Содержимое:</strong> ${fileContentPreview}</p>
+                    // Placeholder image (replace with actual image if available)
+                    const placeholderImage = document.createElement('img');
+                    placeholderImage.src = 'images/placeholder.jpg'; // Replace with actual image URL
+                    placeholderImage.alt = 'Обложка фанфика';
+                    placeholderImage.classList.add('fanfic-image');
+
+                    // Title and metadata
+                    const titleElement = document.createElement('div');
+                    titleElement.classList.add('fanfic-metadata');
+                    titleElement.innerHTML = `
+                        <p><strong>Название:</strong> ${title}</p>
+                        <p><strong>Автор:</strong> Неизвестен</p> <!-- Placeholder for author -->
                     `;
 
-                    gistsListElement.appendChild(gistItem);
+                    // Read button
+                    const readButton = document.createElement('button');
+                    readButton.classList.add('read-button');
+                    readButton.textContent = 'Читать';
+                    readButton.dataset.gistId = gist.id; // Store Gist ID for AJAX request
+                    readButton.onclick = () => loadFanficContent(gist.id, rawUrl);
+
+                    // Append elements to the card
+                    fanficCard.appendChild(placeholderImage);
+                    fanficCard.appendChild(titleElement);
+                    fanficCard.appendChild(readButton);
+
+                    gistsListElement.appendChild(fanficCard);
                 }
             } catch (error) {
                 gistsListElement.textContent = `Ошибка: ${error.message}`;
             }
         });
+
+        // Function to load fanfic content using AJAX
+        async function loadFanficContent(gistId, rawUrl) {
+            try {
+                const modal = document.getElementById('fanficModal');
+                const modalContent = document.querySelector('.modal-content');
+                const fanficTitle = document.getElementById('fanficTitle');
+                const fanficAuthorDate = document.getElementById('fanficAuthorDate');
+                const fanficContent = document.getElementById('fanficContent');
+
+                // Fetch the fanfic content
+                const response = await fetch(rawUrl);
+                if (!response.ok) {
+                    throw new Error('Не удалось загрузить содержимое файла');
+                }
+
+                const content = await response.text();
+
+                // Parse the content to extract title, author, and date
+                const lines = content.split('\n');
+                const metaLine = lines[0].trim(); // First line is the JSON metadata
+                const bodyLines = lines.slice(1); // Remaining lines are the body
+
+                // Parse the JSON metadata
+                let author = 'Неизвестен';
+                try {
+                    const meta = JSON.parse(metaLine);
+                    author = meta.author || 'Неизвестен';
+                } catch (error) {
+                    console.error('Ошибка при парсинге метаданных:', error);
+                }
+
+                // Set modal content
+                fanficTitle.textContent = title; // Use the title from the Gist description
+                fanficAuthorDate.textContent = `Автор: ${author}`;
+
+                // Process the body content
+                let processedContent = '';
+                bodyLines.forEach((line, index) => {
+                    if (line.startsWith('#')) {
+                        // Chapter heading
+                        processedContent += `<h3>${line.slice(1).trim()}</h3>`;
+                    } else {
+                        // Regular paragraph
+                        processedContent += `<p>${line.trim()}</p>`;
+                    }
+                });
+
+                fanficContent.innerHTML = processedContent;
+
+                // Show the modal
+                modal.style.display = 'block';
+            } catch (error) {
+                alert(`Ошибка при загрузке фанфика: ${error.message}`);
+            }
+        }
+
+        // Close the modal when the close button is clicked
+        document.querySelector('.close-modal').onclick = () => {
+            document.getElementById('fanficModal').style.display = 'none';
+        };
     </script>
 </body>
 </html>
