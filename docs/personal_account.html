@@ -43,15 +43,15 @@
                 <!-- Rounded Rectangles for User Information -->
                 <div class="rounded-rectangle">
                     <label>Имя:</label>
-                    <p>${name}</p>
+                    <p id="nameField">${name}</p>
                 </div>
                 <div class="rounded-rectangle">
                     <label>Почта:</label>
-                    <p>${email}</p>
+                    <p id="emailField">${email}</p>
                 </div>
                 <div class="rounded-rectangle">
                     <label>Пароль:</label>
-                    <p>${passwd_pub}</p>
+                    <p id="passwordField">${passwd_pub}</p>
                 </div>
                 <!-- Activation Key Section -->
                 <div id="activationKeySection"></div>
@@ -68,153 +68,153 @@
     </footer>
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    if (!isLoggedIn || isLoggedIn !== 'true') {
-        // User is not logged in
-        const mainContent = document.querySelector('main');
-        mainContent.innerHTML = `
-            <h2>Вы не вошли в аккаунт</h2>
-            <button class="button" onclick="location.href='registration.html'">Войти</button>
-        `;
-        return; // Stop further execution
-    }
-    // If the user is logged in, fetch their email from localStorage
-    const email = localStorage.getItem('userEmail');
-    if (!email) {
-        const mainContent = document.querySelector('main');
-        mainContent.innerHTML = `
-            <h2>Ошибка: Данные пользователя не найдены</h2>
-            <button class="button" onclick="location.href='registration.html'">Войти</button>
-        `;
-        return;
-    }
-    const githubToken = 'ghp_iFEyATUgNTdKWnja' + '0PorXZQUKu2u8P4EPxhI';
-    try {
-        const response = await fetch('https://api.github.com/gists', {
-            method: 'GET',
-            headers: {
-                'Authorization': `token ${githubToken}`
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (!isLoggedIn || isLoggedIn !== 'true') {
+                // User is not logged in
+                const mainContent = document.querySelector('main');
+                mainContent.innerHTML = `
+                    <h2>Вы не вошли в аккаунт</h2>
+                    <button class="button" onclick="location.href='registration.html'">Войти</button>
+                `;
+                return; // Stop further execution
             }
-        });
-        if (!response.ok) {
-            throw new Error('Ошибка при получении данных.');
-        }
-        const gists = await response.json();
-        const fileName = `user${email}`;
-        const userGist = gists.find(gist => gist.files && gist.files[fileName]);
-        if (!userGist) {
-            const mainContent = document.querySelector('main');
-            mainContent.innerHTML = `
-                <h2>Ошибка: Пользователь не найден</h2>
-                <button class="button" onclick="location.href='registration.html'">Войти</button>
-            `;
-            return;
-        }
-        const rawUrl = userGist.files[fileName]?.raw_url;
-        if (!rawUrl) {
-            const mainContent = document.querySelector('main');
-            mainContent.innerHTML = `
-                <h2>Ошибка: Файл пользователя пуст</h2>
-                <button class="button" onclick="location.href='registration.html'">Войти</button>
-            `;
-            return;
-        }
-        const fileResponse = await fetch(rawUrl);
-        if (!fileResponse.ok) {
-            throw new Error('Ошибка: Не удалось загрузить содержимое файла.');
-        }
-        const fileContent = await fileResponse.text();
-        const userData = JSON.parse(fileContent);
-        // Populate the user's profile information
-        document.querySelector('#profile-tab h2').textContent = `${userData.role || 'Пользователь'}`;
-        document.querySelector('.rounded-rectangle:nth-of-type(1) p').textContent = `${userData.name}`;
-        document.querySelector('.rounded-rectangle:nth-of-type(2) p').textContent = `${userData.email}`;
-        document.querySelector('.rounded-rectangle:nth-of-type(3) p').textContent = `*`.repeat(userData.password.length); // Mask the password
-        // Handle Activation Key Section
-        const activationKeySection = document.getElementById('activationKeySection');
-        let userToken = userData.userToken || '';
-        // Ensure userToken is treated as an empty string if undefined or null
-        userToken = userToken.trim() === '' ? '' : userToken;
-        if (userToken === '') {
-            // Display text field for entering activation key
-            activationKeySection.innerHTML = `
-                <input type="text" id="userTokenID" name="userTokenID" placeholder="Enter the token" required>
-                <button class="button" id="saveActivationKeyButton">Сохранить ключ</button>
-            `;
-            // Save Activation Key Button
-            document.getElementById('saveActivationKeyButton').addEventListener('click', async function () {
-                const activationKeyInput = document.getElementById('userTokenID'); // Use the updated ID
-                const activationKey = activationKeyInput.value.trim();
-                if (!activationKey) {
-                    alert('Введите ключ активации.');
+            // If the user is logged in, fetch their email from localStorage
+            const email = localStorage.getItem('userEmail');
+            if (!email) {
+                const mainContent = document.querySelector('main');
+                mainContent.innerHTML = `
+                    <h2>Ошибка: Данные пользователя не найдены</h2>
+                    <button class="button" onclick="location.href='registration.html'">Войти</button>
+                `;
+                return;
+            }
+            const githubToken = 'ghp_iFEyATUgNTdKWnja' + '0PorXZQUKu2u8P4EPxhI';
+            try {
+                const response = await fetch('https://api.github.com/gists', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `token ${githubToken}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Ошибка при получении данных.');
+                }
+                const gists = await response.json();
+                const fileName = `user${email}`;
+                const userGist = gists.find(gist => gist.files && gist.files[fileName]);
+                if (!userGist) {
+                    const mainContent = document.querySelector('main');
+                    mainContent.innerHTML = `
+                        <h2>Ошибка: Пользователь не найден</h2>
+                        <button class="button" onclick="location.href='registration.html'">Войти</button>
+                    `;
                     return;
                 }
-                // Update the user's Gist file with the activation key
-                const updatedUserData = { ...userData, userToken: activationKey };
-                const updatedFileContent = JSON.stringify(updatedUserData);
-                try {
-                    const updateResponse = await fetch(userGist.url, {
-                        method: 'PATCH',
-                        headers: {
-                            'Authorization': `token ${githubToken}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            files: {
-                                [fileName]: {
-                                    content: updatedFileContent
-                                }
-                            }
-                        })
-                    });
-                    if (!updateResponse.ok) {
-                        throw new Error('Ошибка при обновлении данных.');
-                    }
-                    // Save the activation key to localStorage
-                    localStorage.setItem('userToken', activationKey);
-                    // Update the UI
-                    activationKeySection.innerHTML = `
-                        <p>Ключ активации: ${activationKey}</p>
+                const rawUrl = userGist.files[fileName]?.raw_url;
+                if (!rawUrl) {
+                    const mainContent = document.querySelector('main');
+                    mainContent.innerHTML = `
+                        <h2>Ошибка: Файл пользователя пуст</h2>
+                        <button class="button" onclick="location.href='registration.html'">Войти</button>
                     `;
-                } catch (error) {
-                    alert(`Ошибка: ${error.message}`);
+                    return;
                 }
-            });
-        } else {
-            // Display the activation key as a paragraph
-            let activationKeyHTML = '';
-            if (userToken === 'rejected') {
-                activationKeyHTML = `
-                    <p style="color: #d25354;">Ключ активации: ${userToken}</p>
-                `;
-            } else {
-                activationKeyHTML = `
-                    <p>Ключ активации: ${userToken}</p>
+                const fileResponse = await fetch(rawUrl);
+                if (!fileResponse.ok) {
+                    throw new Error('Ошибка: Не удалось загрузить содержимое файла.');
+                }
+                const fileContent = await fileResponse.text();
+                const userData = JSON.parse(fileContent);
+                // Populate the user's profile information
+                document.querySelector('#profile-tab h2').textContent = `${userData.role || 'Пользователь'}`;
+                document.getElementById('nameField').textContent = `${userData.name}`;
+                document.getElementById('emailField').textContent = `${userData.email}`;
+                document.getElementById('passwordField').textContent = `*`.repeat(userData.password.length); // Mask the password
+                // Handle Activation Key Section
+                const activationKeySection = document.getElementById('activationKeySection');
+                let userToken = userData.userToken || '';
+                // Ensure userToken is treated as an empty string if undefined or null
+                userToken = userToken.trim() === '' ? '' : userToken;
+                if (userToken === '') {
+                    // Display text field for entering activation key
+                    activationKeySection.innerHTML = `
+                        <input type="text" id="userTokenID" name="userTokenID" placeholder="Enter the token" required>
+                        <button class="button" id="saveActivationKeyButton">Сохранить ключ</button>
+                    `;
+                    // Save Activation Key Button
+                    document.getElementById('saveActivationKeyButton').addEventListener('click', async function () {
+                        const activationKeyInput = document.getElementById('userTokenID'); // Use the updated ID
+                        const activationKey = activationKeyInput.value.trim();
+                        if (!activationKey) {
+                            alert('Введите ключ активации.');
+                            return;
+                        }
+                        // Update the user's Gist file with the activation key
+                        const updatedUserData = { ...userData, userToken: activationKey };
+                        const updatedFileContent = JSON.stringify(updatedUserData);
+                        try {
+                            const updateResponse = await fetch(userGist.url, {
+                                method: 'PATCH',
+                                headers: {
+                                    'Authorization': `token ${githubToken}`,
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    files: {
+                                        [fileName]: {
+                                            content: updatedFileContent
+                                        }
+                                    }
+                                })
+                            });
+                            if (!updateResponse.ok) {
+                                throw new Error('Ошибка при обновлении данных.');
+                            }
+                            // Save the activation key to localStorage
+                            localStorage.setItem('userToken', activationKey);
+                            // Update the UI
+                            activationKeySection.innerHTML = `
+                                <p>Ключ активации: ${activationKey}</p>
+                            `;
+                        } catch (error) {
+                            alert(`Ошибка: ${error.message}`);
+                        }
+                    });
+                } else {
+                    // Display the activation key as a paragraph
+                    let activationKeyHTML = '';
+                    if (userToken === 'rejected') {
+                        activationKeyHTML = `
+                            <p style="color: #d25354;">Ключ активации: ${userToken}</p>
+                        `;
+                    } else {
+                        activationKeyHTML = `
+                            <p>Ключ активации: ${userToken}</p>
+                        `;
+                    }
+                    activationKeySection.innerHTML = activationKeyHTML;
+                }
+                // Add event listener for logout button
+                const logoutButton = document.getElementById('logoutButton');
+                logoutButton.addEventListener('click', function () {
+                    // Clear login status and user data
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('userEmail');
+                    window.location.href = 'index.html'; // Redirect to homepage
+                });
+                // Add event listener for change password button
+                const changePasswordButton = document.getElementById('changePasswordButton');
+                changePasswordButton.addEventListener('click', function () {
+                    window.location.href = 'change_password.html'; // Redirect to change password page
+                });
+            } catch (error) {
+                const mainContent = document.querySelector('main');
+                mainContent.innerHTML = `
+                    <h2>Ошибка: ${error.message}</h2>
+                    <button class="button" onclick="location.href='registration.html'">Войти</button>
                 `;
             }
-            activationKeySection.innerHTML = activationKeyHTML;
-        }
-        // Add event listener for logout button
-        const logoutButton = document.getElementById('logoutButton');
-        logoutButton.addEventListener('click', function () {
-            // Clear login status and user data
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('userEmail');
-            window.location.href = 'index.html'; // Redirect to homepage
         });
-        // Add event listener for change password button
-        const changePasswordButton = document.getElementById('changePasswordButton');
-        changePasswordButton.addEventListener('click', function () {
-            window.location.href = 'change_password.html'; // Redirect to change password page
-        });
-    } catch (error) {
-        const mainContent = document.querySelector('main');
-        mainContent.innerHTML = `
-            <h2>Ошибка: ${error.message}</h2>
-            <button class="button" onclick="location.href='registration.html'">Войти</button>
-        `;
-    }
-});
     </script>
 </body>
 </html>
