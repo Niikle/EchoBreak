@@ -219,7 +219,6 @@ footer span {
     padding: 10px;
     cursor: pointer;
     transition: transform 0.3s ease;
-    position: relative; /* For aligning the button */
 }
 
 .fanfic-card:hover {
@@ -237,11 +236,12 @@ footer span {
 .fanfic-metadata {
     color: #fff;
     font-size: 14px;
+    margin-bottom: 10px; /* Add some spacing to prevent overlap */
 }
 
 .read-button {
     display: block;
-    width: 100%;
+    width: 100%; /* Make the button as wide as the image */
     padding: 10px;
     background-color: #d25354;
     color: #fff;
@@ -250,10 +250,6 @@ footer span {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    position: absolute;
-    bottom: 10px; /* Align to the bottom */
-    left: 0;
-    right: 0;
 }
 
 .read-button:hover {
