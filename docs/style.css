@@ -158,3 +158,50 @@ footer {
 footer span {
     color: #d25354;
 }
+
+/* ===================================== */
+/* Avatar Placeholder */
+.avatar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border: 2px solid #d25354;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: #d25354;
+}
+
+/* Buttons Alignment */
+.buttons-container {
+    display: flex;
+    gap: 10px;
+}
+
+/* Rounded Rectangles */
+.rounded-rectangle {
+    background-color: #3b3b3b;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    color: #fff;
+    border: 2px solid #d25354; /* Red border */
+}
+
+.rounded-rectangle label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.rounded-rectangle p {
+    margin: 0;
+}
