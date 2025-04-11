@@ -40,7 +40,7 @@
 
         <!-- Modal for Displaying Fanfic Content -->
         <div id="fanficModal" class="modal">
-            <div class="modal-content">
+            <div class="modal-content full-screen">
                 <span class="close-modal">&times;</span>
                 <h2 id="fanficTitle"></h2>
                 <p id="fanficAuthorDate"></p>
@@ -104,6 +104,21 @@
                         continue;
                     }
 
+                    // Fetch the fanfic content to extract the author's name
+                    let author = 'Неизвестен';
+                    try {
+                        const contentResponse = await fetch(rawUrl);
+                        if (contentResponse.ok) {
+                            const content = await contentResponse.text();
+                            const lines = content.split('\n');
+                            const metaLine = lines[0].trim(); // First line is the JSON metadata
+                            const meta = JSON.parse(metaLine);
+                            author = meta.author || 'Неизвестен';
+                        }
+                    } catch (error) {
+                        console.error('Ошибка при парсинге метаданных:', error);
+                    }
+
                     // Create a fanfic card
                     const fanficCard = document.createElement('div');
                     fanficCard.classList.add('fanfic-card');
@@ -119,7 +134,7 @@
                     titleElement.classList.add('fanfic-metadata');
                     titleElement.innerHTML = `
                         <p><strong>Название:</strong> ${title}</p>
-                        <p><strong>Автор:</strong> Неизвестен</p> <!-- Placeholder for author -->
+                        <p><strong>Автор:</strong> ${author}</p>
                     `;
 
                     // Read button
@@ -128,7 +143,7 @@
                     readButton.textContent = 'Читать';
                     readButton.dataset.gistId = gist.id; // Store Gist ID for AJAX request
                     readButton.dataset.title = title; // Store the title for the modal
-                    readButton.onclick = () => loadFanficContent(gist.id, rawUrl, title);
+                    readButton.onclick = () => loadFanficContent(gist.id, rawUrl, title, createdAt);
 
                     // Append elements to the card
                     fanficCard.appendChild(placeholderImage);
@@ -143,7 +158,7 @@
         });
 
         // Function to load fanfic content using AJAX
-        async function loadFanficContent(gistId, rawUrl, title) {
+        async function loadFanficContent(gistId, rawUrl, title, releaseDate) {
             try {
                 const modal = document.getElementById('fanficModal');
                 const modalContent = document.querySelector('.modal-content');
@@ -175,7 +190,7 @@
 
                 // Set modal content
                 fanficTitle.textContent = title; // Use the title from the Gist description
-                fanficAuthorDate.textContent = `Автор: ${author}`;
+                fanficAuthorDate.textContent = `Дата выхода: ${releaseDate}`;
 
                 // Process the body content
                 let processedContent = '';
