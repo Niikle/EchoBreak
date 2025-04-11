@@ -342,3 +342,11 @@ footer span {
 #fanficContent p {
     margin: 10px 0;
 }
+
+/* Separator Line in Modal */
+.modal-separator {
+    width: 100%; /* Full width */
+    height: 1px; /* Thin line */
+    background-color: #fff; /* White color */
+    margin: 10px 0; /* Add spacing above and below the line */
+}
