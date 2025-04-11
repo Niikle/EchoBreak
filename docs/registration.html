@@ -6,6 +6,8 @@
     <title>EchoBreak - Регистрация</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="images/favicon.png">
+    <!-- Import CryptoJS for password hashing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -45,90 +47,86 @@
     <footer>
         <p>EchoBreak, 2025</p>
     </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js">
-    // Import a hashing library (e.g., CryptoJS)
-    // You can include CryptoJS via CDN for simplicity:
-    // <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js">
+    <script>
+        // GitHub Personal Access Token (Replace with your token)
+        const githubToken = 'ghp_iFEyATUgNTdKWnja' + '0PorXZQUKu2u8P4EPxhI';
 
-    // GitHub Personal Access Token (Replace with your token)
-    const githubToken = 'ghp_iFEyATUgNTdKWnja' + '0PorXZQUKu2u8P4EPxhI';
+        document.getElementById('registerForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const messageElement = document.getElementById('message');
 
-    document.getElementById('registerForm').addEventListener('submit', async function(event) {
-        event.preventDefault();
-        const name = document.getElementById('reg-name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
-        const messageElement = document.getElementById('message');
-
-        if (!name || !email || !password) {
-            messageElement.textContent = 'Ошибка: Заполните все поля.';
-            return;
-        }
-
-        try {
-            messageElement.textContent = 'Проверка данных...';
-            const fileName = `user${email}`;
-
-            // Fetch all Gists to check if the user already exists
-            const response = await fetch('https://api.github.com/gists', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `token ${githubToken}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Ошибка при получении данных.');
-            }
-
-            const gists = await response.json();
-            const userGist = gists.find(gist => gist.files && gist.files[fileName]);
-
-            if (userGist) {
-                messageElement.textContent = 'Ошибка: Пользователь с таким email уже зарегистрирован.';
+            if (!name || !email || !password) {
+                messageElement.textContent = 'Ошибка: Заполните все поля.';
                 return;
             }
 
-            // Hash the password using SHA-256
-            const hashedPassword = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
+            try {
+                messageElement.textContent = 'Проверка данных...';
+                const fileName = `user${email}`;
 
-            // Create a new Gist for the user with the hashed password
-            messageElement.textContent = 'Регистрация...';
-            const createResponse = await fetch('https://api.github.com/gists', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `token ${githubToken}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    description: `User registration for ${email}`,
-                    public: false, // Keep the registration data private
-                    files: {
-                        [fileName]: { // Use "user" + email as the filename
-                            content: JSON.stringify({ 
-                                name, 
-                                email, 
-                                password: hashedPassword, // Store the hashed password
-                                userToken: '' // Add empty userToken
-                            })
-                        }
+                // Fetch all Gists to check if the user already exists
+                const response = await fetch('https://api.github.com/gists', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `token ${githubToken}`
                     }
-                })
-            });
+                });
 
-            if (!createResponse.ok) {
-                const errorData = await createResponse.json();
-                throw new Error(`Ошибка: ${errorData.message}`);
+                if (!response.ok) {
+                    throw new Error('Ошибка при получении данных.');
+                }
+
+                const gists = await response.json();
+                const userGist = gists.find(gist => gist.files && gist.files[fileName]);
+
+                if (userGist) {
+                    messageElement.textContent = 'Ошибка: Пользователь с таким email уже зарегистрирован.';
+                    return;
+                }
+
+                // Hash the password using SHA-256
+                const hashedPassword = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
+
+                // Create a new Gist for the user with the hashed password
+                messageElement.textContent = 'Регистрация...';
+                const createResponse = await fetch('https://api.github.com/gists', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        description: `User registration for ${email}`,
+                        public: false, // Keep the registration data private
+                        files: {
+                            [fileName]: { // Use "user" + email as the filename
+                                content: JSON.stringify({ 
+                                    name, 
+                                    email, 
+                                    password: hashedPassword, // Store the hashed password
+                                    userToken: '' // Add empty userToken
+                                })
+                            }
+                        }
+                    })
+                });
+
+                if (!createResponse.ok) {
+                    const errorData = await createResponse.json();
+                    throw new Error(`Ошибка: ${errorData.message}`);
+                }
+
+                messageElement.textContent = 'Вы успешно зарегистрировались!';
+                setTimeout(() => {
+                    window.location.href = 'login.html'; // Redirect to login page
+                }, 2000);
+            } catch (error) {
+                messageElement.textContent = `Ошибка: ${error.message}`;
             }
-
-            messageElement.textContent = 'Вы успешно зарегистрировались!';
-            setTimeout(() => {
-                window.location.href = 'login.html'; // Redirect to login page
-            }, 2000);
-        } catch (error) {
-            messageElement.textContent = `Ошибка: ${error.message}`;
-        }
-    });
-</script>
+        });
+    </script>
 </body>
 </html>
