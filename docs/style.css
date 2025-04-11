@@ -208,9 +208,21 @@ footer span {
 /* Fanfic Grid */
 .fanfic-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* 2 columns per row */
     gap: 20px;
     margin-top: 20px;
+}
+
+/* Responsive Design for Mobile */
+@media (max-width: 768px) {
+    .fanfic-grid {
+        grid-template-columns: 1fr; /* 1 column per row on smaller screens */
+    }
+
+    .fanfic-image {
+        height: auto; /* Adjust image height automatically */
+        width: 100%;
+    }
 }
 
 .fanfic-card {
@@ -227,7 +239,7 @@ footer span {
 
 .fanfic-image {
     width: 100%;
-    height: 120px; /* Shorter image height */
+    height: 180px; /* Adjust height for larger images */
     object-fit: cover;
     border-radius: 5px;
     margin-bottom: 10px;
