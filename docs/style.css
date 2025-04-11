@@ -1,5 +1,4 @@
 /* General Reset */
-
 @font-face {
     font-family: 'Hweebaqs';
     src: url('fonts/Hweebaqs.ttf') format('truetype');
@@ -204,4 +203,126 @@ footer span {
 
 .rounded-rectangle p {
     margin: 0;
+}
+
+/* Fanfic Grid */
+.fanfic-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.fanfic-card {
+    background-color: #3b3b3b;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    position: relative; /* For aligning the button */
+}
+
+.fanfic-card:hover {
+    transform: scale(1.05);
+}
+
+.fanfic-image {
+    width: 100%;
+    height: 120px; /* Shorter image height */
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.fanfic-metadata {
+    color: #fff;
+    font-size: 14px;
+}
+
+.read-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #d25354;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: absolute;
+    bottom: 10px; /* Align to the bottom */
+    left: 0;
+    right: 0;
+}
+
+.read-button:hover {
+    background-color: #b33434;
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background-color: #3b3b3b;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+}
+
+.close-modal {
+    color: #d25354;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: #fff;
+    text-decoration: none;
+    outline: none;
+}
+
+/* Modal Content Styling */
+#fanficTitle {
+    color: #d25354;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#fanficAuthorDate {
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+#fanficContent {
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+#fanficContent h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+#fanficContent p {
+    margin: 10px 0;
 }
