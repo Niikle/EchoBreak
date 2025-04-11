@@ -127,7 +127,8 @@
                     readButton.classList.add('read-button');
                     readButton.textContent = 'Читать';
                     readButton.dataset.gistId = gist.id; // Store Gist ID for AJAX request
-                    readButton.onclick = () => loadFanficContent(gist.id, rawUrl);
+                    readButton.dataset.title = title; // Store the title for the modal
+                    readButton.onclick = () => loadFanficContent(gist.id, rawUrl, title);
 
                     // Append elements to the card
                     fanficCard.appendChild(placeholderImage);
@@ -142,7 +143,7 @@
         });
 
         // Function to load fanfic content using AJAX
-        async function loadFanficContent(gistId, rawUrl) {
+        async function loadFanficContent(gistId, rawUrl, title) {
             try {
                 const modal = document.getElementById('fanficModal');
                 const modalContent = document.querySelector('.modal-content');
