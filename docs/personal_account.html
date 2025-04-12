@@ -127,9 +127,20 @@
             document.querySelector('#profile-tab h2').textContent = `${userData.role || 'Пользователь'}`;
             document.getElementById('nameField').textContent = `${userData.name}`;
             document.getElementById('emailField').textContent = `${userData.email}`;
+            // Check and Load Profile Picture on Page Load
+            const profilePicFileName = `$${userData.name}$${userData.email}_ProfilePic`;
+            const profilePicFileExists = userGist.files[profilePicFileName];
+            const userAvatar = document.getElementById('user-avatar');
+            if (profilePicFileExists) {
+                const profilePicRawUrl = profilePicFileExists.raw_url;
+                const profilePicResponse = await fetch(profilePicRawUrl);
+                if (profilePicResponse.ok) {
+                    const profilePicBase64 = await profilePicResponse.text();
+                    userAvatar.src = profilePicBase64; // Set the Base64 image as the avatar source
+                }
+            }
             // Handle Profile Picture Upload
             const addPhotoButton = document.getElementById('addPhotoButton');
-            const userAvatar = document.getElementById('user-avatar');
             addPhotoButton.addEventListener('click', async function () {
                 const input = document.createElement('input');
                 input.type = 'file';
@@ -143,7 +154,6 @@
                     const reader = new FileReader();
                     reader.onload = async function (e) {
                         const base64Image = e.target.result.split(',')[1]; // Extract Base64 part
-                        const profilePicFileName = `$${userData.name}${userData.email}_ProfilePic`;
                         try {
                             // Crop the image to a square
                             const img = new Image();
@@ -167,8 +177,7 @@
                                 resizedCtx.drawImage(canvas, 0, 0, maxSize, maxSize);
                                 const croppedBase64Image = resizedCanvas.toDataURL('image/png');
                                 const finalBase64Image = croppedBase64Image.split(',')[1];
-                                // Check if the profile picture file already exists in the Gist
-                                const profilePicFileExists = userGist.files[profilePicFileName];
+                                // Update the Gist with the new profile picture
                                 const updateResponse = await fetch(userGist.url, {
                                     method: profilePicFileExists ? 'PATCH' : 'POST',
                                     headers: {
@@ -188,7 +197,9 @@
                                 }
                                 // Update the displayed avatar with the cropped and resized image
                                 userAvatar.src = croppedBase64Image;
-                                alert('Изображение успешно сохранено в Gist!');
+                                // Show success alert with Gist link
+                                const gistLink = userGist.html_url;
+                                alert(`Изображение успешно сохранено в Gist! Просмотреть можно по ссылке: ${gistLink}`);
                             };
                         } catch (error) {
                             alert(`Ошибка: ${error.message}`);
