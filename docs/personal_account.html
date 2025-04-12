@@ -172,7 +172,7 @@
                             localStorage.setItem('userToken', activationKey);
                             // Update the UI
                             activationKeyField.innerHTML = `
-                                <p>Ключ активации: ${activationKey}</p>
+                                <p>${activationKey}</p>
                             `;
                         } catch (error) {
                             alert(`Ошибка: ${error.message}`);
@@ -183,11 +183,11 @@
                     let activationKeyHTML = '';
                     if (userToken === 'rejected') {
                         activationKeyHTML = `
-                            <p style="color: #d25354;">Ключ активации: ${userToken}</p>
+                            <p style="color: #d25354;">${userToken}</p>
                         `;
                     } else {
                         activationKeyHTML = `
-                            <p>Ключ активации: ${userToken}</p>
+                            <p>${userToken}</p>
                         `;
                     }
                     activationKeyField.innerHTML = activationKeyHTML;
