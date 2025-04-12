@@ -39,6 +39,8 @@
                     <div class="avatar">
                         <img src="images/avatar-placeholder.png" id="user-avatar" alt="User Avatar">
                     </div>
+                      <!-- Hidden file input -->
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;">
                 </div>
                 <!-- Rounded Rectangles for User Information -->
                 <div class="rounded-rectangle">
@@ -206,55 +208,46 @@
                 });
 
                 // Add event listener for profile picture upload
-                const addPhotoButton = document.getElementById('addPhotoButton');
-                addPhotoButton.addEventListener('click', function () {
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.accept = 'image/*';
-                    input.onchange = async function (event) {
-                        const file = event.target.files[0];
-                        if (!file) {
-                            alert('Выберите файл.');
-                            return;
-                        }
-                        const reader = new FileReader();
-                        reader.onload = async function (e) {
-                            const base64Data = e.target.result.split(',')[1]; // Get Base64 data
-                            const profilePicFileName = `$${userData.email}_profilePic`;
-                            const gistPayload = {
-                                description: 'Profile Picture',
-                                public: false,
-                                files: {
-                                    [profilePicFileName]: {
-                                        content: base64Data
-                                    }
-                                }
-                            };
-                            try {
-                                const uploadResponse = await fetch('https://api.github.com/gists', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Authorization': `token ${githubToken}`,
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify(gistPayload)
-                                });
-                                if (!uploadResponse.ok) {
-                                    throw new Error('Ошибка при загрузке изображения.');
-                                }
-                                const uploadResult = await uploadResponse.json();
-                                const profilePicRawUrl = uploadResult.files[profilePicFileName]?.raw_url;
-                                if (profilePicRawUrl) {
-                                    document.getElementById('user-avatar').src = profilePicRawUrl;
-                                }
-                            } catch (error) {
-                                alert(`Ошибка: ${error.message}`);
-                            }
-                        };
-                        reader.readAsDataURL(file); // Convert file to Base64
-                    };
-                    input.click(); // Trigger file selection dialog
+                const userAvatar = document.getElementById('addPhotoButton');
+                // Trigger file input when "Add Photo" button is clicked
+                addPhotoButton.addEventListener('click', () => {
+                photoInput.click(); // Open file dialog
                 });
+                
+                // Handle file selection
+                photoInput.addEventListener('change', async (event) => {
+                const file = event.target.files[0]; // Get the selected file
+                if (file) {
+                  // Preview the image
+                  const reader = new FileReader();
+                  reader.onload = (e) => {
+                    userAvatar.src = e.target.result; // Update the avatar image
+                  };
+                  reader.readAsDataURL(file);
+                
+                  // Upload the image to the server
+                  try {
+                    const formData = new FormData();
+                    formData.append('avatar', file); // Append the file to FormData
+                
+                    const response = await fetch('/api/upload-avatar', {
+                      method: 'POST',
+                      body: formData,
+                    });
+                
+                    if (!response.ok) {
+                      throw new Error('Failed to upload image.');
+                    }
+                
+                    const result = await response.json();
+                    console.log('Avatar uploaded successfully:', result);
+                  } catch (error) {
+                    console.error('Error uploading avatar:', error.message);
+                    alert('Failed to upload image. Please try again.');
+                  }
+                }
+                });
+
             } catch (error) {
                 const mainContent = document.querySelector('main');
                 mainContent.innerHTML = `
