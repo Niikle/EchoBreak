@@ -289,6 +289,7 @@ footer span {
     width: 80%;
     max-width: 600px;
     position: relative;
+    text-align: left;
 }
 
 .modal-content.full-screen {
@@ -331,6 +332,7 @@ footer span {
     color: #fff;
     font-size: 16px;
     line-height: 1.6;
+    text-align: left;
 }
 
 #fanficContent h3 {
@@ -340,7 +342,7 @@ footer span {
 }
 
 #fanficContent p {
-    margin: 10px 0;
+    margin: 8px 0;
 }
 
 /* Separator Line in Modal */
