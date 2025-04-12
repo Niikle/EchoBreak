@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EchoBreak - Личный кабинет</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="images/favicon.png">
-    <!-- Add this script tag for making API requests -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- Add this script tag for making API requests -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -36,8 +28,9 @@
                 <!-- User Avatar and Add Photo Button -->
                 <div class="avatar-container">
                     <button class="button" id="addPhotoButton">Добавить фото</button>
+                    <button class="button" id="removePhotoButton">Удалить фото</button>
                     <div class="avatar">
-                        <img src="images/avatar-placeholder.png" id="user-avatar">
+                        <img src="images/avatar-placeholder.png" id="user-avatar" class="circular-avatar">
                     </div>
                 </div>
                 <!-- Rounded Rectangles for User Information -->
@@ -64,6 +57,14 @@
     <footer>
         <p>EchoBreak, 2025</p>
     </footer>
+    <style>
+        .circular-avatar {
+            border-radius: 50%;
+            width: 128px;
+            height: 128px;
+            object-fit: cover;
+        }
+    </style>
     <script>
     document.addEventListener('DOMContentLoaded', async function () {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -140,7 +141,6 @@
                 }
             }
             // Handle Profile Picture Upload
-            // Handle Profile Picture Upload
             const addPhotoButton = document.getElementById('addPhotoButton');
             addPhotoButton.addEventListener('click', async function () {
                 const input = document.createElement('input');
@@ -169,7 +169,6 @@
                                 const offsetX = (img.width - size) / 2;
                                 const offsetY = (img.height - size) / 2;
                                 ctx.drawImage(img, offsetX, offsetY, size, size, 0, 0, size, size);
-                                
                                 // Resize the cropped image to 128x128
                                 const resizedCanvas = document.createElement('canvas');
                                 const resizedCtx = resizedCanvas.getContext('2d');
@@ -178,8 +177,19 @@
                                 resizedCanvas.height = maxSize;
                                 resizedCtx.drawImage(canvas, 0, 0, maxSize, maxSize);
                                 
-                                const croppedBase64Image = resizedCanvas.toDataURL('image/png');
-                                const finalBase64Image = croppedBase64Image.split(',')[1];
+                                // Crop the image to a circle
+                                const circleCanvas = document.createElement('canvas');
+                                const circleCtx = circleCanvas.getContext('2d');
+                                circleCanvas.width = maxSize;
+                                circleCanvas.height = maxSize;
+                                circleCtx.beginPath();
+                                circleCtx.arc(maxSize / 2, maxSize / 2, maxSize / 2, 0, Math.PI * 2, true);
+                                circleCtx.closePath();
+                                circleCtx.clip();
+                                circleCtx.drawImage(resizedCanvas, 0, 0, maxSize, maxSize);
+                                
+                                const circularBase64Image = circleCanvas.toDataURL('image/png');
+                                const finalBase64Image = circularBase64Image.split(',')[1];
                                 
                                 // Update the Gist with the new profile picture
                                 const updateResponse = await fetch(userGist.url, {
@@ -199,10 +209,8 @@
                                 if (!updateResponse.ok) {
                                     throw new Error('Ошибка при обновлении данных.');
                                 }
-                                
                                 // Update the displayed avatar with the cropped and resized image
-                                userAvatar.src = croppedBase64Image;
-                                
+                                userAvatar.src = circularBase64Image;
                                 // Show success alert with Gist link
                                 const gistLink = userGist.html_url;
                                 // alert(`Изображение успешно сохранено в Gist! Просмотреть можно по ссылке: ${gistLink}`);
@@ -215,6 +223,34 @@
                 };
                 input.click(); // Trigger the file input dialog
             });
+
+            // Handle Remove Photo Button
+            const removePhotoButton = document.getElementById('removePhotoButton');
+            removePhotoButton.addEventListener('click', async function () {
+                try {
+                    // Remove the profile picture from the Gist
+                    const updateResponse = await fetch(userGist.url, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `token ${githubToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            files: {
+                                [profilePicFileName]: null // Remove the file
+                            }
+                        })
+                    });
+                    if (!updateResponse.ok) {
+                        throw new Error('Ошибка при удалении фото.');
+                    }
+                    // Reset the avatar to placeholder
+                    userAvatar.src = 'images/avatar-placeholder.png';
+                } catch (error) {
+                    alert(`Ошибка: ${error.message}`);
+                }
+            });
+
             // Handle Activation Key Section
             const activationKeyField = document.getElementById('activationKeyField');
             let userToken = userData.userToken || '';
