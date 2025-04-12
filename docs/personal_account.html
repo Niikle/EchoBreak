@@ -76,8 +76,7 @@
             `;
             return; // Stop further execution
         }
-
-        // Fetch user email from localStorage
+        // If the user is logged in, fetch their email from localStorage
         const email = localStorage.getItem('userEmail');
         if (!email) {
             const mainContent = document.querySelector('main');
@@ -87,25 +86,20 @@
             `;
             return;
         }
-
         const githubToken = 'ghp_iFEyATUgNTdKWnja' + '0PorXZQUKu2u8P4EPxhI';
         try {
-            // Fetch the user's Gist
             const response = await fetch('https://api.github.com/gists', {
                 method: 'GET',
                 headers: {
                     'Authorization': `token ${githubToken}`
                 }
             });
-
             if (!response.ok) {
                 throw new Error('Ошибка при получении данных.');
             }
-
             const gists = await response.json();
             const fileName = `user${email}`;
             const userGist = gists.find(gist => gist.files && gist.files[fileName]);
-
             if (!userGist) {
                 const mainContent = document.querySelector('main');
                 mainContent.innerHTML = `
@@ -114,7 +108,6 @@
                 `;
                 return;
             }
-
             const rawUrl = userGist.files[fileName]?.raw_url;
             if (!rawUrl) {
                 const mainContent = document.querySelector('main');
@@ -124,12 +117,10 @@
                 `;
                 return;
             }
-
             const fileResponse = await fetch(rawUrl);
             if (!fileResponse.ok) {
                 throw new Error('Ошибка: Не удалось загрузить содержимое файла.');
             }
-
             const fileContent = await fileResponse.text();
             const userData = JSON.parse(fileContent);
 
@@ -162,8 +153,6 @@
                         try {
                             // Check if the profile picture file already exists in the Gist
                             const profilePicFileExists = userGist.files[profilePicFileName];
-
-                            // Update or create the profile picture file in the Gist
                             const updateResponse = await fetch(userGist.url, {
                                 method: profilePicFileExists ? 'PATCH' : 'POST',
                                 headers: {
@@ -180,12 +169,39 @@
                             });
 
                             if (!updateResponse.ok) {
-                                const errorData = await updateResponse.json();
-                                throw new Error(`Ошибка при обновлении данных: ${errorData.message}`);
+                                throw new Error('Ошибка при обновлении данных.');
                             }
 
-                            // Display the uploaded image
-                            userAvatar.src = `data:image/png;base64,${base64Image}`;
+                            // Resize and display the uploaded image
+                            const img = new Image();
+                            img.src = e.target.result;
+                            img.onload = function () {
+                                const canvas = document.createElement('canvas');
+                                const ctx = canvas.getContext('2d');
+                                const maxSize = 150; // Maximum width/height for the avatar
+                                let width = img.width;
+                                let height = img.height;
+
+                                // Calculate aspect ratio and resize dimensions
+                                if (width > height) {
+                                    if (width > maxSize) {
+                                        height *= maxSize / width;
+                                        width = maxSize;
+                                    }
+                                } else {
+                                    if (height > maxSize) {
+                                        width *= maxSize / height;
+                                        height = maxSize;
+                                    }
+                                }
+
+                                canvas.width = width;
+                                canvas.height = height;
+                                ctx.drawImage(img, 0, 0, width, height);
+
+                                // Update the displayed avatar with the resized image
+                                userAvatar.src = canvas.toDataURL('image/png');
+                            };
                         } catch (error) {
                             alert(`Ошибка: ${error.message}`);
                         }
@@ -197,28 +213,28 @@
                 input.click(); // Trigger the file input dialog
             });
 
-            // Activation Key Logic (unchanged)
+            // Handle Activation Key Section
             const activationKeyField = document.getElementById('activationKeyField');
             let userToken = userData.userToken || '';
+            // Ensure userToken is treated as an empty string if undefined or null
             userToken = userToken.trim() === '' ? '' : userToken;
-
             if (userToken === '') {
+                // Display text field for entering activation key
                 activationKeyField.innerHTML = `
                     <input type="text" id="userTokenID" name="userTokenID" placeholder="Введите ключ активации" required>
                     <button class="button" id="saveActivationKeyButton">Сохранить ключ</button>
                 `;
-
+                // Save Activation Key Button
                 document.getElementById('saveActivationKeyButton').addEventListener('click', async function () {
-                    const activationKeyInput = document.getElementById('userTokenID');
+                    const activationKeyInput = document.getElementById('userTokenID'); // Use the updated ID
                     const activationKey = activationKeyInput.value.trim();
                     if (!activationKey) {
                         alert('Введите ключ активации.');
                         return;
                     }
-
+                    // Update the user's Gist file with the activation key
                     const updatedUserData = { ...userData, userToken: activationKey };
                     const updatedFileContent = JSON.stringify(updatedUserData);
-
                     try {
                         const updateResponse = await fetch(userGist.url, {
                             method: 'PATCH',
@@ -234,39 +250,47 @@
                                 }
                             })
                         });
-
                         if (!updateResponse.ok) {
                             throw new Error('Ошибка при обновлении данных.');
                         }
-
+                        // Save the activation key to localStorage
                         localStorage.setItem('userToken', activationKey);
-                        activationKeyField.innerHTML = `<p>${activationKey}</p>`;
+                        // Update the UI
+                        activationKeyField.innerHTML = `
+                            <p>${activationKey}</p>
+                        `;
                     } catch (error) {
                         alert(`Ошибка: ${error.message}`);
                     }
                 });
             } else {
+                // Display the activation key as a paragraph
                 let activationKeyHTML = '';
                 if (userToken === 'rejected') {
-                    activationKeyHTML = `<p style="color: #d25354;">${userToken}</p>`;
+                    activationKeyHTML = `
+                        <p style="color: #d25354;">${userToken}</p>
+                    `;
                 } else {
-                    activationKeyHTML = `<p>${userToken}</p>`;
+                    activationKeyHTML = `
+                        <p>${userToken}</p>
+                    `;
                 }
                 activationKeyField.innerHTML = activationKeyHTML;
             }
 
-            // Logout Button
+            // Add event listener for logout button
             const logoutButton = document.getElementById('logoutButton');
             logoutButton.addEventListener('click', function () {
+                // Clear login status and user data
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('userEmail');
-                window.location.href = 'index.html';
+                window.location.href = 'index.html'; // Redirect to homepage
             });
 
-            // Change Password Button
+            // Add event listener for change password button
             const changePasswordButton = document.getElementById('changePasswordButton');
             changePasswordButton.addEventListener('click', function () {
-                window.location.href = 'change_password.html';
+                window.location.href = 'change_password.html'; // Redirect to change password page
             });
         } catch (error) {
             const mainContent = document.querySelector('main');
