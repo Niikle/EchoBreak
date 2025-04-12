@@ -50,11 +50,9 @@
                     <p id="emailField">${email}</p>
                 </div>
                 <div class="rounded-rectangle">
-                    <label>Пароль:</label>
-                    <p id="passwordField">${passwd_pub}</p>
+                    <label>Ключ активации:</label>
+                    <p id="activationKeyField"></p>
                 </div>
-                <!-- Activation Key Section -->
-                <div id="activationKeySection"></div>
                 <!-- Logout Button -->
                 <button class="button" id="logoutButton">Выйти</button>
                 <!-- Change Password Button -->
@@ -129,16 +127,16 @@
                 document.querySelector('#profile-tab h2').textContent = `${userData.role || 'Пользователь'}`;
                 document.getElementById('nameField').textContent = `${userData.name}`;
                 document.getElementById('emailField').textContent = `${userData.email}`;
-                document.getElementById('passwordField').textContent = `*`.repeat(userData.password.length); // Mask the password
+                
                 // Handle Activation Key Section
-                const activationKeySection = document.getElementById('activationKeySection');
+                const activationKeyField = document.getElementById('activationKeyField');
                 let userToken = userData.userToken || '';
                 // Ensure userToken is treated as an empty string if undefined or null
                 userToken = userToken.trim() === '' ? '' : userToken;
                 if (userToken === '') {
                     // Display text field for entering activation key
-                    activationKeySection.innerHTML = `
-                        <input type="text" id="userTokenID" name="userTokenID" placeholder="Enter the token" required>
+                    activationKeyField.innerHTML = `
+                        <input type="text" id="userTokenID" name="userTokenID" placeholder="Введите ключ активации" required>
                         <button class="button" id="saveActivationKeyButton">Сохранить ключ</button>
                     `;
                     // Save Activation Key Button
@@ -173,7 +171,7 @@
                             // Save the activation key to localStorage
                             localStorage.setItem('userToken', activationKey);
                             // Update the UI
-                            activationKeySection.innerHTML = `
+                            activationKeyField.innerHTML = `
                                 <p>Ключ активации: ${activationKey}</p>
                             `;
                         } catch (error) {
@@ -192,8 +190,9 @@
                             <p>Ключ активации: ${userToken}</p>
                         `;
                     }
-                    activationKeySection.innerHTML = activationKeyHTML;
+                    activationKeyField.innerHTML = activationKeyHTML;
                 }
+                
                 // Add event listener for logout button
                 const logoutButton = document.getElementById('logoutButton');
                 logoutButton.addEventListener('click', function () {
