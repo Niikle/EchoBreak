@@ -123,86 +123,81 @@
             }
             const fileContent = await fileResponse.text();
             const userData = JSON.parse(fileContent);
-
             // Populate the user's profile information
             document.querySelector('#profile-tab h2').textContent = `${userData.role || 'Пользователь'}`;
             document.getElementById('nameField').textContent = `${userData.name}`;
             document.getElementById('emailField').textContent = `${userData.email}`;
-
             // Handle Profile Picture Upload
             const addPhotoButton = document.getElementById('addPhotoButton');
             const userAvatar = document.getElementById('user-avatar');
-
             addPhotoButton.addEventListener('click', async function () {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = async function (event) {
-        const file = event.target.files[0];
-        if (!file) {
-            alert('Файл не выбран.');
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = async function (e) {
-            // Extract Base64 part and prepend "data:image/png;base64,"
-            const base64Image = `data:image/png;base64,${e.target.result.split(',')[1]}`;
-            const profilePicFileName = `${email}_ProfilePic`; // Use email as part of the file name
-            try {
-                // Check if the profile picture file already exists in the Gist
-                const profilePicFileExists = userGist.files[profilePicFileName];
-                const updateResponse = await fetch(userGist.url, {
-                    method: profilePicFileExists ? 'PATCH' : 'POST',
-                    headers: {
-                        'Authorization': `token ${githubToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        files: {
-                            [profilePicFileName]: {
-                                content: base64Image // Save the full Base64 string
-                            }
-                        }
-                    })
-                });
-                if (!updateResponse.ok) {
-                    throw new Error('Ошибка при обновлении данных.');
-                }
-                // Resize and display the uploaded image
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = function () {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    const maxSize = 150; // Maximum width/height for the avatar
-                    let width = img.width;
-                    let height = img.height;
-                    // Calculate aspect ratio and resize dimensions
-                    if (width > height) {
-                        if (width > maxSize) {
-                            height *= maxSize / width;
-                            width = maxSize;
-                        }
-                    } else {
-                        if (height > maxSize) {
-                            width *= maxSize / height;
-                            height = maxSize;
-                        }
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = async function (event) {
+                    const file = event.target.files[0];
+                    if (!file) {
+                        alert('Файл не выбран.');
+                        return;
                     }
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(img, 0, 0, width, height);
-                    // Update the displayed avatar with the resized image
-                    userAvatar.src = canvas.toDataURL('image/png');
+                    const reader = new FileReader();
+                    reader.onload = async function (e) {
+                        const base64Image = e.target.result.split(',')[1]; // Extract Base64 part
+                        const profilePicFileName = `${email}_ProfilePic`;
+                        try {
+                            // Crop the image to a square
+                            const img = new Image();
+                            img.src = e.target.result;
+                            img.onload = async function () {
+                                const canvas = document.createElement('canvas');
+                                const ctx = canvas.getContext('2d');
+                                const size = Math.min(img.width, img.height); // Square size
+                                canvas.width = size;
+                                canvas.height = size;
+                                // Crop the image to a square
+                                const offsetX = (img.width - size) / 2;
+                                const offsetY = (img.height - size) / 2;
+                                ctx.drawImage(img, offsetX, offsetY, size, size, 0, 0, size, size);
+                                // Resize the cropped image
+                                const resizedCanvas = document.createElement('canvas');
+                                const resizedCtx = resizedCanvas.getContext('2d');
+                                const maxSize = 150; // Maximum width/height for the avatar
+                                resizedCanvas.width = maxSize;
+                                resizedCanvas.height = maxSize;
+                                resizedCtx.drawImage(canvas, 0, 0, maxSize, maxSize);
+                                const croppedBase64Image = resizedCanvas.toDataURL('image/png');
+                                const finalBase64Image = croppedBase64Image.split(',')[1];
+                                // Check if the profile picture file already exists in the Gist
+                                const profilePicFileExists = userGist.files[profilePicFileName];
+                                const updateResponse = await fetch(userGist.url, {
+                                    method: profilePicFileExists ? 'PATCH' : 'POST',
+                                    headers: {
+                                        'Authorization': `token ${githubToken}`,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        files: {
+                                            [profilePicFileName]: {
+                                                content: `data:image/png;base64,${finalBase64Image}`
+                                            }
+                                        }
+                                    })
+                                });
+                                if (!updateResponse.ok) {
+                                    throw new Error('Ошибка при обновлении данных.');
+                                }
+                                // Update the displayed avatar with the cropped and resized image
+                                userAvatar.src = croppedBase64Image;
+                                alert('Изображение успешно сохранено в Gist!');
+                            };
+                        } catch (error) {
+                            alert(`Ошибка: ${error.message}`);
+                        }
+                    };
+                    reader.readAsDataURL(file); // Read the file as Base64
                 };
-            } catch (error) {
-                alert(`Ошибка: ${error.message}`);
-            }
-        };
-        reader.readAsDataURL(file); // Read the file as Base64
-    };
-    input.click(); // Trigger the file input dialog
-});
+                input.click(); // Trigger the file input dialog
+            });
             // Handle Activation Key Section
             const activationKeyField = document.getElementById('activationKeyField');
             let userToken = userData.userToken || '';
@@ -267,7 +262,6 @@
                 }
                 activationKeyField.innerHTML = activationKeyHTML;
             }
-
             // Add event listener for logout button
             const logoutButton = document.getElementById('logoutButton');
             logoutButton.addEventListener('click', function () {
@@ -276,7 +270,6 @@
                 localStorage.removeItem('userEmail');
                 window.location.href = 'index.html'; // Redirect to homepage
             });
-
             // Add event listener for change password button
             const changePasswordButton = document.getElementById('changePasswordButton');
             changePasswordButton.addEventListener('click', function () {
