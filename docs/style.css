@@ -208,7 +208,7 @@ footer span {
 /* Fanfic Grid */
 .fanfic-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns per row */
+    grid-template-columns: repeat(3, 1fr); /* 2 columns per row */
     gap: 20px;
     margin-top: 20px;
 }
@@ -289,7 +289,6 @@ footer span {
     width: 80%;
     max-width: 600px;
     position: relative;
-    text-align: left;
 }
 
 .modal-content.full-screen {
