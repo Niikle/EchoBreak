@@ -173,7 +173,7 @@
                                 // Resize the cropped image to 128x128
                                 const resizedCanvas = document.createElement('canvas');
                                 const resizedCtx = resizedCanvas.getContext('2d');
-                                const maxSize = 80; // Set the maximum width/height for the avatar
+                                const maxSize = 128; // Set the maximum width/height for the avatar
                                 resizedCanvas.width = maxSize;
                                 resizedCanvas.height = maxSize;
                                 resizedCtx.drawImage(canvas, 0, 0, maxSize, maxSize);
