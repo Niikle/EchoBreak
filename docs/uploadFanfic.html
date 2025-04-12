@@ -50,7 +50,6 @@
     </footer>
     <script>
         // Login Check Script
-        
         document.addEventListener('DOMContentLoaded', function () {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             if (!isLoggedIn || isLoggedIn !== 'true') {
@@ -78,6 +77,14 @@
                 messageElement.textContent = 'Ошибка: Заполните все поля.';
                 return;
             }
+
+            // Get the author's name from localStorage
+            const author = localStorage.getItem('userName') || 'Unknown Author';
+
+            // Prepend the metadata line to the fanfic content
+            const metadataLine = `{"author":"${author}","reference-image":"text"}\n`;
+            const fullText = metadataLine + text;
+
             // Replace with your GitHub Personal Access Token
             const githubToken = 'ghp_iFEyATUgNTdKWnja' + '0PorXZQUKu2u8P4EPxhI';
             try {
@@ -93,7 +100,7 @@
                         public: true, // Set to false for private Gists
                         files: {
                             [`${title}.txt`]: { // Use the title as the filename
-                                content: text
+                                content: fullText // Include the metadata line
                             }
                         }
                     })
