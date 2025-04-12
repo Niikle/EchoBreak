@@ -168,8 +168,8 @@ footer span {
 }
 
 .avatar {
-    width: 80px;
-    height: 80px;
+    width: 128px;
+    height: 128px;
     border: 2px solid #d25354;
     border-radius: 50%;
     display: flex;
