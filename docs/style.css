@@ -39,8 +39,13 @@ header img {
 }
 
 /* Active Logo */
-header a#logo-link.active {
+header #logo-link.active {
     border-bottom: 2px solid #d25354; /* Highlight the logo when active */
+}
+
+left-label {
+    display: block;
+    text-align: left;
 }
 
 nav ul {
@@ -120,8 +125,23 @@ ol {
     transition: background-color 0.3s ease;
 }
 
+.transparent-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3b3b3b;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
 .button:hover {
     background-color: #b33434;
+}
+
+.transparent-button:hover {
+    background-color: #303030;
 }
 
 form {
