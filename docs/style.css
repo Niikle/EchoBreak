@@ -30,12 +30,17 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: 12px;
 }
 
 header img {
     width: 40px; /* Logo width */
     height: 40px;
     /* margin-right: 10px; */
+}
+
+header space {
+    width: 20px;
 }
 
 /* Active Logo */
@@ -46,6 +51,7 @@ header #logo-link.active {
 left-label {
     display: block;
     text-align: left;
+    height: 20px;
 }
 
 nav ul {
@@ -205,6 +211,7 @@ footer span {
     gap: 10px;
 }
 
+
 /* Rounded Rectangles */
 .rounded-rectangle {
     background-color: #3b3b3b;
@@ -212,6 +219,7 @@ footer span {
     padding: 10px;
     margin-bottom: 10px;
     color: #fff;
+    width: 220px;
     border: 2px solid #d25354; /* Red border */
 }
 
@@ -223,6 +231,7 @@ footer span {
 
 .rounded-rectangle p {
     margin: 0;
+    text-align: left;
 }
 
 /* Fanfic Grid */
