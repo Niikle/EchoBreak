@@ -30,34 +30,35 @@
     <main>
         <!-- Tab Content -->
         <div class="tab-content">
-            <!-- Profile Tab -->
             <div id="profile-tab" class="tab-pane active">
                 <h2>${role}</h2>
-                <!-- User Avatar and Add Photo Button -->
+                <!-- Avatar Container -->
                 <div class="avatar-container">
-                    <button class="button" id="addPhotoButton">Добавить фото</button>
-                    <button class="button" id="removePhotoButton">Удалить фото</button>
-                    <div class="avatar">
-                        <img src="images/avatar-placeholder.png" id="user-avatar" class="circular-avatar">
+                    <div class="button-group">
+                        <button class="transparent-button" id="addPhotoButton">Добавить фото</button>
+                    </div>
+                    <div class="avatar"></div>
+                </div>
+                <!-- User Information -->
+                <div class="user-info">
+                    <left-label>Имя:</left-label>
+                    <div class="rounded-rectangle">
+                        <p id="nameField">${name}</p>
+                    </div>
+                    <left-label>Почта:</left-label>
+                    <div class="rounded-rectangle">
+                        <p id="emailField">${email}</p>
+                    </div>
+                    <left-label>Ключ активации:</left-label>
+                    <div class="rounded-rectangle">
+                        <p id="activationKeyField"></p>
                     </div>
                 </div>
-                <!-- Rounded Rectangles for User Information -->
-                <div class="rounded-rectangle">
-                    <label>Имя:</label>
-                    <p id="nameField">${name}</p>
+                <!-- Buttons -->
+                <div class="buttons-container">
+                    <button class="button" id="changePasswordButton">Сменить пароль</button>
+                    <button class="button" id="logoutButton">Выйти</button>
                 </div>
-                <div class="rounded-rectangle">
-                    <label>Почта:</label>
-                    <p id="emailField">${email}</p>
-                </div>
-                <div class="rounded-rectangle">
-                    <label>Ключ активации:</label>
-                    <p id="activationKeyField"></p>
-                </div>
-                <!-- Logout Button -->
-                <button class="button" id="logoutButton">Выйти</button>
-                <!-- Change Password Button -->
-                <button class="button" id="changePasswordButton">Сменить пароль</button>
             </div>
         </div>
     </main>
@@ -65,17 +66,9 @@
     <footer>
         <p>EchoBreak, 2025</p>
     </footer>
-    <style>
-        .circular-avatar {
-            border-radius: 50%;
-            width: 128px;
-            height: 128px;
-            object-fit: cover;
-        }
-    </style>
     <script>
     document.addEventListener('DOMContentLoaded', async function () {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const isLoggedIn = 'true';
         if (!isLoggedIn || isLoggedIn !== 'true') {
             // User is not logged in
             const mainContent = document.querySelector('main');
@@ -86,7 +79,7 @@
             return; // Stop further execution
         }
         // If the user is logged in, fetch their email from localStorage
-        const email = localStorage.getItem('userEmail');
+        const email = 'test@example.com';
         if (!email) {
             const mainContent = document.querySelector('main');
             mainContent.innerHTML = `
@@ -230,33 +223,6 @@
                     reader.readAsDataURL(file); // Read the file as Base64
                 };
                 input.click(); // Trigger the file input dialog
-            });
-
-            // Handle Remove Photo Button
-            const removePhotoButton = document.getElementById('removePhotoButton');
-            removePhotoButton.addEventListener('click', async function () {
-                try {
-                    // Remove the profile picture from the Gist
-                    const updateResponse = await fetch(userGist.url, {
-                        method: 'PATCH',
-                        headers: {
-                            'Authorization': `token ${githubToken}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            files: {
-                                [profilePicFileName]: null // Remove the file
-                            }
-                        })
-                    });
-                    if (!updateResponse.ok) {
-                        throw new Error('Ошибка при удалении фото.');
-                    }
-                    // Reset the avatar to placeholder
-                    userAvatar.src = 'images/avatar-placeholder.png';
-                } catch (error) {
-                    alert(`Ошибка: ${error.message}`);
-                }
             });
 
             // Handle Activation Key Section
