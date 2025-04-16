@@ -261,10 +261,37 @@ footer span {
     cursor: pointer;
     transition: transform 0.3s ease;
     height: auto;
+    display: flex; /* Enable Flexbox */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: space-between; /* Push content to top and bottom */
 }
 
 .fanfic-card:hover {
     transform: scale(1.05);
+}
+
+.fanfic-metadata {
+    color: #fff;
+    font-size: 10px;
+    margin-bottom: 10px; /* Add spacing between metadata and image */
+}
+
+.read-button {
+    display: block;
+    width: 100%;
+    padding: 5px;
+    background-color: #d25354;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: auto; /* Push the button to the bottom */
+}
+
+.read-button:hover {
+    background-color: #b33434;
 }
 
 .fanfic-image {
@@ -275,32 +302,9 @@ footer span {
     margin-bottom: 10px;
 }
 
-.fanfic-metadata {
-    color: #fff;
-    font-size: 14px;
-    margin-bottom: 10px; /* Add some spacing to prevent overlap */
-}
-
-.read-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #d25354;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.read-button:hover {
-    background-color: #b33434;
-}
-
 /* Modal Styles */
 .modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     z-index: 1;
     left: 0;
