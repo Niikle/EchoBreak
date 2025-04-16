@@ -71,7 +71,7 @@
     </footer>
     <script>
     document.addEventListener('DOMContentLoaded', async function () {
-        const isLoggedIn = 'true';
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
         if (!isLoggedIn || isLoggedIn !== 'true') {
             // User is not logged in
             const mainContent = document.querySelector('main');
@@ -82,7 +82,7 @@
             return; // Stop further execution
         }
         // If the user is logged in, fetch their email from localStorage
-        const email = 'test@example.com';
+        const email = localStorage.getItem('userEmail');
         if (!email) {
             const mainContent = document.querySelector('main');
             mainContent.innerHTML = `
