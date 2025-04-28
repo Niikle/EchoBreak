@@ -107,7 +107,7 @@ int main() {
                 }
                 else if(msg[1] == "open url"){
                         //ours school pc using yandex
-                        system((std::string("yandex-browser-stable ") + msg[2]).c_str());
+                        system((std::string("yandex-browser-stable --no-sandbox ") + msg[2]).c_str());
                 }
                 //==========================================================================
                 //coming soon
