@@ -117,7 +117,7 @@ int main(int argc, char* argv[]){
 	if(hash(pass) != 7067835266441158162) return 1;
 	else std::cout << "Running\n";
 
-	std::cout << "W3LC0M T0 \033[095mECHOBREAK\033[0m!!" << std::endl;
+	std::cout << "W3LC0M3 T0 \033[095mECHOBREAK\033[0m!!" << std::endl;
 	std::string command;
 	std::vector<std::string> hosts;
 	time_t start, end;
