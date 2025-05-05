@@ -9,23 +9,19 @@
 #include <unistd.h>
 
 #define PORT 6969
+#define REC_PORT 6868
 #define BUFFER_SIZE 256
 
 int main() {
-    int sock, response;
+    int sock;
     int opt = 1;
-    struct sockaddr_in broadcastAddr, respAddr;
+    struct sockaddr_in broadcastAddr;
 
+    // sending
     if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         std::cerr << "Socket creation error" << std::endl;
         return -1;
     }
-
-    if ((response = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-        std::cerr << "resp socket creation error" << std::endl;
-        return -1;
-    }
-
     //enable broadcast
     if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &opt, sizeof(opt)) < 0) {
         std::cerr << "Error setting socket options" << std::endl;
@@ -38,34 +34,42 @@ int main() {
     broadcastAddr.sin_port = htons(PORT);
     broadcastAddr.sin_addr.s_addr = inet_addr("172.17.213.255"); 
 
-    memset(&respAddr, 0, sizeof(respAddr));
-    respAddr.sin_family = AF_INET;
-    respAddr.sin_port = htons(PORT);
-    respAddr.sin_addr.s_addr = INADDR_ANY;
-
-    if (bind(response, (struct sockaddr *)&respAddr, sizeof(respAddr)) < 0) {
-        std::cerr << "bind failed\n";
-        close(response);
+    //receiving
+    int rec_sock;
+    struct sockaddr_in broadcastAddr_rec;
+    char buffer[BUFFER_SIZE];
+    memset(buffer, 0, sizeof(buffer));
+    if ((rec_sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        std::cout << "receving socket error";
+        close(rec_sock);
+        return -1;
     }
+
+    memset(&broadcastAddr_rec, 0, sizeof(broadcastAddr_rec));
+    broadcastAddr_rec.sin_family = AF_INET;
+    broadcastAddr_rec.sin_addr.s_addr = INADDR_ANY;
+    broadcastAddr_rec.sin_port = htons(REC_PORT);
+
+    if (bind(rec_sock, (struct sockaddr*)&broadcastAddr_rec, sizeof(broadcastAddr_rec)) < 0) {
+        std::cout << "receiving binding err";
+        close(rec_sock);
+        return -1;
+    }
+
 
     std::string message;
     std::cout << "Enter the message in format(hostname;cmd/func;command): ";
-    
-    char buffer[BUFFER_SIZE];
-    ssize_t bytesReceived;
-
-    socklen_t addrLen = sizeof(respAddr);
-
+    socklen_t addrLen = sizeof(broadcastAddr_rec);
     while(true){
         //sending
         std::getline(std::cin, message);
         sendto(sock, message.c_str(), message.size(), 0, (struct sockaddr*)&broadcastAddr, sizeof(broadcastAddr));
-
-        bytesReceived = recvfrom(response, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&respAddr, &addrLen);
+        //receiving
+        ssize_t bytesReceived = recvfrom(sock, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&broadcastAddr_rec, &addrLen);
         if(bytesReceived > 0){
-            std::cout << buffer;
-            memset(buffer, 0, sizeof(buffer));
+            std::cout << buffer << std::endl;
         }
+        memset(buffer, 0, sizeof(buffer));
     }
     close(sock);
     return 0;
