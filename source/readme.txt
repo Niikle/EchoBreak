@@ -1,5 +1,5 @@
-to install ebinst:
-1. mv EchoBreak/source/ebinst /usr/local/bin
+to install ebinstl:
+1. mv EchoBreak/source/ebinstl /usr/local/bin
 2. chmod +x /usr/local/bin/ebinstl
 
 to run ebinst:
