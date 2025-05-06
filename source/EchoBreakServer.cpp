@@ -7,10 +7,25 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <thread>
 
 #define PORT 6969
 #define REC_PORT 6868
 #define BUFFER_SIZE 256
+
+void receive(int sock, sockaddr_in addr){
+    std::cout << "\nstart listening\n";
+    char buffer[BUFFER_SIZE];
+    memset(buffer, 0, sizeof(buffer));
+    socklen_t addrLen = sizeof(addr);
+    while(1){
+        ssize_t bytesReceived = recvfrom(sock, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&addr, &addrLen);
+        if(bytesReceived > 0){
+            std::cout << buffer << std::endl;
+        }
+        memset(buffer, 0, sizeof(buffer));
+    }
+}
 
 int main() {
     int sock;
@@ -37,8 +52,6 @@ int main() {
     //receiving
     int rec_sock;
     struct sockaddr_in broadcastAddr_rec;
-    char buffer[BUFFER_SIZE];
-    memset(buffer, 0, sizeof(buffer));
     if ((rec_sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         std::cout << "receving socket error";
         close(rec_sock);
@@ -55,23 +68,22 @@ int main() {
         close(rec_sock);
         return -1;
     }
-
-
     std::string message;
-    std::cout << "Enter the message in format(hostname;cmd/func;command): ";
+    std::cout << "Enter the message in format(hostname;cmd/func;command) to exit write exit: ";
     socklen_t addrLen = sizeof(broadcastAddr_rec);
+
+    std::thread rec(receive, rec_sock, broadcastAddr_rec);
+
     while(true){
         //sending
         std::getline(std::cin, message);
-        sendto(sock, message.c_str(), message.size(), 0, (struct sockaddr*)&broadcastAddr, sizeof(broadcastAddr));
-        //receiving
-        ssize_t bytesReceived = recvfrom(rec_sock, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&broadcastAddr_rec, &addrLen);
-        if(bytesReceived > 0){
-            std::cout << buffer << std::endl;
+        if(message == "exit"){
+            break;
         }
-        memset(buffer, 0, sizeof(buffer));
+        sendto(sock, message.c_str(), message.size(), 0, (struct sockaddr*)&broadcastAddr, sizeof(broadcastAddr));
         message = "";
     }
+    rec.join();
     close(sock);
     return 0;
 }

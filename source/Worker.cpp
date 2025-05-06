@@ -15,6 +15,8 @@
 #define SENDING_PORT 6868
 #define BUFFER_SIZE 256
 
+//fucked???
+
 std::vector<std::string> split(std::string str){
 	std::string word = "";
 	std::vector<std::string> res;
@@ -166,4 +168,3 @@ int main() {
     close(sock);
     return 0;
 }
-
