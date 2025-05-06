@@ -22,6 +22,7 @@ void receive(int sock, sockaddr_in addr){
         ssize_t bytesReceived = recvfrom(sock, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&addr, &addrLen);
         if(bytesReceived > 0){
             std::cout << buffer << std::endl;
+            std::cout << "received some data\n";
         }
         memset(buffer, 0, sizeof(buffer));
     }

