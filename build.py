@@ -10,7 +10,7 @@ os.mkdir("build")
 # installers
 for i in range(ip_count):
     net_range = str(input(f"enter the network range {i+1} like 172.17.212.0/24: "))
-    with open(f"build/installer{i}", "a") as f:
+    with open(f"build/installer{i}.py", "a") as f:
         f.write(f"""import subprocess
 import ipaddress
 import paramiko
