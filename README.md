@@ -1,5 +1,6 @@
 # EchoBreak
 ## We are not responsible for your actions!
+## For educational purposes only!
 
 `/EchoBreak/source/EchoBreakServer.cpp`
 ### Assemble
