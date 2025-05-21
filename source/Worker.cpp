@@ -50,7 +50,7 @@ int main() {
         std::ofstream sfile(service, std::ios::out);
         sfile << "[Unit]\n";
         sfile << "Description=echobreak\n";
-        sfile << "After=multi-user.target";
+        sfile << "After=multi-user.target\n";
         sfile << "\n";
         sfile << "[Service]\n";
         sfile << "Type=simple\n";
